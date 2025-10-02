@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+    /** @var \App\Models\User $user */
 
     public function create()
     {
@@ -34,6 +35,7 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
+        $post->with('comments.user');
         return view('posts.show', [
             'post' => $post,
         ]);
@@ -54,5 +56,19 @@ class PostController extends Controller
 
         $user->likes()->detach($post);
         return back();
+    }
+
+    public function destroy(Post $post)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if ($user->id !== $post->user_id) {
+            // Jika ID user yang login TIDAK SAMA DENGAN ID pemilik post,
+            // hentikan proses dan tampilkan halaman error 403 (Forbidden).
+            abort(403, 'This action is unauthorized.');
+        }
+        $post->delete();
+
+        return redirect()->route('profile.show', $user->username)->with('status', 'post deleterd');
     }
 }

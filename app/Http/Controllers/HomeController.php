@@ -15,6 +15,8 @@ class HomeController extends Controller
         // 1. Dapatkan ID dari user yang sedang kita follow
         $followingIds = $user->following()->pluck('users.id');
 
+        $followingIds->push($user->id);
+
         $posts = Post::with('user') // eageer loading
             ->whereIn('user_id', $followingIds)
             ->latest()  //shorcut buat orderby(created_at, desc)

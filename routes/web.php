@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -31,4 +32,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('post.like');
     Route::post('/posts/{post}/unlike', [PostController::class, 'unlike'])->name('post.unlike');
+
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+
 });

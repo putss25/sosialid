@@ -19,8 +19,79 @@
                     <a href="{{ route('profile.show', $post->user) }}"
                         class="text-sm font-bold">{{ $post->user->username }}</a>
                 </div>
+                @if (auth()->check() && auth()->user()->id === $post->user_id)
+                    <form action="{{ route('posts.destroy', $post) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-red-500 font-semibold text-sm"
+                            onclick="return confirm('Are you sure you want to delete this post?')">
+                            Delete
+                        </button>
+                    </form>
+                @endif
+            </div>
+            @if ($post->caption)
+                <div class="flex items-start space-x-3 mb-4">
+                    <a href="{{ route('profile.show', $post->user) }}">
+                        <img src="{{ $post->user->avatar }}" alt="{{ $post->user->username }}'s avatar"
+                            class="w-10 h-10 rounded-full object-cover">
+                    </a>
+                    <div>
+                        <a href="{{ route('profile.show', $post->user) }}"
+                            class="font-bold">{{ $post->user->username }}</a>
+                        <span>{{ $post->caption }}</span>
+                        <div class="text-xs text-gray-400 mt-1">{{ $post->created_at->diffForHumans() }}</div>
+                    </div>
+                </div>
+            @endif
+
+            {{-- Garis Pemisah --}}
+            @if ($post->comments->isNotEmpty() && $post->caption)
+                <hr class="my-4">
+            @endif
+            <div class="max-h-40 overflow-auto">
+                @foreach ($post->comments as $comment)
+                    <div class="flex items-start space-x-3 mb-4">
+                        <a href="{{ route('profile.show', $comment->user) }}">
+                            <img src="{{ $comment->user->avatar }}" alt="{{ $comment->user->username }}'s avatar"
+                                class="w-10 h-10 rounded-full object-cover">
+                        </a>
+                        <div>
+                            <a href="{{ route('profile.show', $comment->user) }}"
+                                class="font-bold">{{ $comment->user->username }}</a>
+                            <span>{{ $comment->body }}</span>
+                            <div class="text-xs text-gray-400 mt-1">{{ $comment->created_at->diffForHumans() }}</div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
 
+            <div class="border-t border-gray-200 mt-4 pt-4">
+                @auth
+                    <form action="{{ route('comments.store', $post) }}" method="POST">
+                        @csrf
+                        <div class="flex items-start space-x-4">
+                            <img src="{{ auth()->user()->avatar }}" alt="Your avatar"
+                                class="w-10 h-10 rounded-full object-cover">
+                            <div class="flex-1">
+                                <textarea name="body" rows="1"
+                                    class="w-full border rounded-lg p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Add a comment..."></textarea>
+                                @error('body')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                                <button type="submit"
+                                    class="mt-2 px-4 py-1 bg-blue-500 text-white text-sm font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">Post</button>
+                            </div>
+                        </div>
+                    </form>
+                @endauth
+                @guest
+                    <p class="text-sm text-gray-500">
+                        <a href="{{ route('login') }}" class="text-blue-500 font-semibold">Log in</a> to post a comment.
+                    </p>
+                @endguest
+            </div>
 
             {{-- Aksi (Like, Comment) & Caption --}}
             <div class="">

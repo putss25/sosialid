@@ -14,7 +14,19 @@
             </div>
             <div class="w-3/4 ml-4">
                 <div class="flex items-center space-x-4">
-                    <h1 class="text-2xl font-bold text-gray-800">{{ $user->username }}</h1>
+                    <div class="flex items-center space-x-2"> {{-- Ubah div sebelumnya agar ada space-x-2 --}}
+                        <h1 class="text-2xl font-bold text-gray-800">{{ $user->username }}</h1>
+
+                        @if ($user->is_verified)
+                            <span title="Verified account">
+                                <svg class="w-6 h-6 text-blue-500 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.48 18.89l-4.47-4.47 1.41-1.41 3.06 3.06 6.36-6.36 1.41 1.41-7.77 7.77z" />
+                                </svg>
+                            </span>
+                        @endif
+                    </div>
                     @if (Auth::user()->id === $user->id)
                         <a href="{{ route('profile.edit') }}"
                             class="bg-gray-200 text-gray-800 font-semibold py-1 px-3 rounded-md text-sm">
