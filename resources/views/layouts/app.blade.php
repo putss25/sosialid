@@ -41,6 +41,7 @@
     <main>
         @yield('content')
     </main>
+ bvgcrdefwxs
 </body>
 
 </html>

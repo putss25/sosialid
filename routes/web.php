@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CommentController;
@@ -15,7 +18,7 @@ Route::post('/register', [RegisterController::class, 'store']);
 
 Route::get('/login', [LoginController::class, 'create'])->name('login');
 Route::post('/login', [LoginController::class, 'store']);
-Route::post('/logout', [LoginController::class, 'destroy']);
+Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 Route::middleware('auth')->group(function () {
 
@@ -34,7 +37,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/posts/{post}/unlike', [PostController::class, 'unlike'])->name('post.unlike');
 
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
-    
-    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/users', [UsersController::class, 'users'])->name('users.index');
+
+    Route::patch('/users/{user}/verify', [UsersController::class, 'verifyUser'])->name('users.verify');
+    Route::delete('/users/{user}', [UsersController::class, 'deleteUser'])->name('users.destroy');
+
+    Route::get('/posts', [AdminPostController::class, 'posts'])->name('posts.index');
+    Route::delete('/post/{post}', [AdminPostController::class, 'deletePost'])->name('posts.destroy');
 });

@@ -51,7 +51,6 @@ class PostController extends Controller
     }
     public function unlike(Post $post)
     {
-        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         $user->likes()->detach($post);
@@ -60,7 +59,6 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
-        /** @var \App\Models\User $user */
         $user = Auth::user();
         if ($user->id !== $post->user_id) {
             // Jika ID user yang login TIDAK SAMA DENGAN ID pemilik post,
