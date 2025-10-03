@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Laravel\Facades\Image; // Perhatikan huruf 'a'
 
 class PostController extends Controller
 {
-    /** @var \App\Models\User $user */
-
+    /** @var \App\Models\User */
     public function create()
     {
         return view('posts.create');
@@ -22,9 +21,22 @@ class PostController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        $path = $request->file('image')->store('posts', 'public');
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
 
-        $validatedData['image'] = "/storage/{$path}";
+            // buat nama file unik
+            $filename = uniqid().'.'.$file->getClientOriginalExtension();
+
+            // Baca file gambar
+            $image = Image::read($file);
+
+            $image->fit(1000, 1000);
+
+            $image->save(storage_path('app/public/posts/'.$filename));
+
+            // Set path gambar untuk disimpan ke database
+            $validatedData['image'] = '/storage/posts/'.$filename;
+        }
 
         $user->posts()->create($validatedData);
 
@@ -36,6 +48,7 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $post->with('comments.user');
+
         return view('posts.show', [
             'post' => $post,
         ]);
@@ -47,13 +60,16 @@ class PostController extends Controller
         $user = Auth::user();
 
         $user->likes()->attach($post);
+
         return back();
     }
+
     public function unlike(Post $post)
     {
         $user = Auth::user();
 
         $user->likes()->detach($post);
+
         return back();
     }
 
