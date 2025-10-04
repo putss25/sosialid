@@ -4,157 +4,284 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" />
-    <!-- Styles / Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+    <script>
+        // Function untuk apply theme
+        function applyTheme(theme) {
+            if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        // Function untuk set theme
+        function setTheme(newTheme) {
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+            updateThemeButtons(newTheme);
+        }
+
+        // Function untuk update tampilan button
+        function updateThemeButtons(currentTheme) {
+            // Remove semua ring
+            ['light', 'dark', 'system'].forEach(t => {
+                const btn = document.getElementById('theme-' + t);
+                if (btn) {
+                    if (t === currentTheme) {
+                        btn.classList.add('ring-2', 'ring-indigo-500');
+                    } else {
+                        btn.classList.remove('ring-2', 'ring-indigo-500');
+                    }
+                }
+            });
+        }
+
+        // Apply theme saat page load
+        const savedTheme = localStorage.getItem('theme') || 'system';
+        applyTheme(savedTheme);
+
+        // Update button state setelah page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateThemeButtons(savedTheme);
+        });
+
+        // Listen untuk system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            const currentTheme = localStorage.getItem('theme') || 'system';
+            if (currentTheme === 'system') {
+                applyTheme('system');
+            }
+        });
+    </script>
 </head>
 
-
-
 <body class="font-sans antialiased">
-    {{-- SATU x-data UTAMA untuk mengontrol semua state --}}
     <div x-data="{
-        sidebarOpen: false,
         createModalOpen: false,
         step: 1,
         imageUrl: null,
+        cropperInstance: null,
+
         handleFileSelect(event) {
             const file = event.target.files[0];
             if (file) {
                 this.imageUrl = URL.createObjectURL(file);
                 this.step = 2;
+                this.$nextTick(() => {
+                    const image = document.getElementById('image-to-crop');
+                    this.cropperInstance = new Cropper(image, {
+                        aspectRatio: 3 / 4,
+                        viewMode: 1,
+                    });
+                });
             }
         },
+
+        cropAndProceed() {
+            if (this.cropperInstance) {
+                const croppedCanvas = this.cropperInstance.getCroppedCanvas({
+                    width: 1080,
+                    height: 1440,
+                });
+                const croppedImageBase64 = croppedCanvas.toDataURL('image/jpeg');
+                this.imageUrl = croppedImageBase64;
+                document.getElementById('cropped-image-data').value = croppedImageBase64;
+                this.step = 3;
+            }
+        },
+
         closeModal() {
             this.createModalOpen = false;
             setTimeout(() => {
                 this.step = 1;
                 this.imageUrl = null;
+                if (this.cropperInstance) {
+                    this.cropperInstance.destroy();
+                    this.cropperInstance = null;
+                }
+                document.getElementById('image-upload').value = '';
             }, 300);
         }
-    }" class="flex h-screen bg-gray-50">
+    }" class="flex h-screen bg-background">
 
-        {{-- Sidebar (Kode Anda di sini sudah bagus) --}}
-        <aside
-            class="flex-shrink-0 w-64 flex flex-col border-r bg-white transition-all duration-300 md:translate-x-0 z-10"
-            :class="{ '-translate-x-full': !sidebarOpen }">
-            <div class="h-16 flex items-center justify-center flex-shrink-0">
-                <a href="{{ route('home') }}" class="text-2xl font-bold text-indigo-600">Sosmed</a>
+        <aside class="hidden md:flex flex-shrink-0 w-64 flex-col border-r  z-10">
+            <div class="h-16 flex items-center  flex-shrink-0 px-4">
+                <img src="/images/snapi.svg" class="w-[40%]" alt="">
             </div>
             <nav class="flex-grow flex flex-col text-gray-600">
                 <a href="{{ route('home') }}"
-                    class="flex items-center px-4 py-3 hover:bg-gray-100 hover:text-gray-800 font-semibold {{ request()->routeIs('home') ? 'bg-gray-100 text-gray-900' : '' }}">
-                    <x-phosphor-house-light class="w-5 h-5 mr-3" />
+                    class="flex items-center px-4 py-3 hover:bg-muted-background font-semibold {{ request()->routeIs('home') ? 'bg-muted-background text-muted-foreground' : '' }}">
+                    <x-phosphor-house-light class="w-6 h-6 mr-3" />
                     <span>Home</span>
                 </a>
                 <button @click="createModalOpen = true"
-                    class="flex items-center px-4 py-3 hover:bg-gray-100 hover:text-gray-800 font-semibold {{ request()->routeIs('posts.create') ? 'bg-gray-100 text-gray-900' : '' }}">
-                    <x-eva-plus-outline class="w-5 h-5 mr-3" />
-                    <span>Create Post</span>
+                    class="flex items-center px-4 py-3 hover:bg-muted-background font-semibold">
+                    <x-eva-plus-outline class="w-6 h-6 mr-3" />
+                    <span>Create</span>
                 </button>
                 <a href="{{ route('profile.show', auth()->user()) }}"
-                    class="flex items-center px-4 py-3 hover:bg-gray-100 hover:text-gray-800 font-semibold {{ request()->routeIs('profile.show', auth()->user()) ? 'bg-gray-100 text-gray-900' : '' }}">
-                    <img class="w-5 h-5 mr-3 object-cover rounded-full" src="{{ Auth::user()->avatar }}"
+                    class="flex items-center px-4 py-3 hover:bg-muted-background font-semibold {{ request()->routeIs('profile.show', auth()->user()) ? 'bg-muted-background text-muted-foreground' : '' }}">
+                    <img class="w-6 h-6 mr-3 object-cover rounded-full" src="{{ Auth::user()->avatar }}"
                         alt="Your avatar">
-
                     <span>Profile</span>
                 </a>
 
-                {{-- Link Admin Kondisional --}}
                 @if (auth()->user()->is_admin)
                     <a href="{{ route('admin.dashboard') }}"
-                        class="flex items-center px-4 py-3 mt-4 border-t hover:bg-gray-100 hover:text-gray-800 font-semibold">
-                        {{-- <x-heroicon-o-shield-check class="w-5 h-5 mr-3" /> --}}
+                        class="flex items-center px-4 py-3 mt-4 border-t hover:bg-muted-background font-semibold">
                         <span>Admin Panel</span>
                     </a>
                 @endif
 
-                <div class="mt-auto">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit"
-                            class="w-full text-left flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-800 font-semibold">
-                            {{-- <x-heroicon-o-arrow-left-on-rectangle class="w-5 h-5 mr-3" /> --}}
-                            <span>Log Out</span>
+                <div class="mt-auto px-4 py-8">
+                    <div x-data="{ dropdownOpen: false }" class="relative">
+                        <button @click="dropdownOpen = !dropdownOpen"
+                            class="relative block h-5 w-5  overflow-hidden focus:outline-none">
+                            <x-fas-bars />
                         </button>
-                    </form>
+
+                        <div x-show="dropdownOpen" @click.away="dropdownOpen = false"
+                            class="absolute bottom-full -translate-y-4 left-2 mt-2 w-48 bg-white rounded-md shadow-xl z-10"
+                            x-cloak>
+                            <div class="px-4 py-2 text-sm text-gray-700">{{ Auth::user()->username }}</div>
+                            <a href="{{ route('settings.index') }}">
+                                <x-elemplus-setting class="h-5 w-5" />
+                                Settings
+                            </a>
+                            <a href="{{ route('home') }}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white">Go to
+                                Site</a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit"
+                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white">
+                                    Log Out
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
                 </div>
+
             </nav>
         </aside>
 
-        {{-- Main Content (Kode Anda sudah bagus) --}}
         <div class="flex-1 flex flex-col overflow-hidden">
-            <header class="flex justify-between items-center p-4 bg-white border-b md:hidden">
-                <button @click="sidebarOpen = !sidebarOpen" class="text-gray-500 focus:outline-none">
-                    {{-- <x-heroicon-o-bars-3 class="h-6 w-6" /> --}}
-                </button>
-                <div class="text-lg font-bold text-indigo-600">Sosmed</div>
-                <div></div>
+            <header class="md:hidden flex justify-between items-center p-4 bg-background border-b">
+                <img src="/images/snapi.svg" class="w-[20%]" alt="">
             </header>
-            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
+
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 pb-16 md:pb-0">
                 @yield('content')
             </main>
         </div>
 
-        {{-- Scripts (Kode Anda sudah bagus) --}}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-        @stack('scripts')
+        <nav class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t flex justify-around items-center z-20">
+            <a href="{{ route('home') }}"
+                class="flex flex-col items-center justify-center text-center p-3 text-sm font-semibold {{ request()->routeIs('home') ? 'text-indigo-600' : 'text-gray-600' }}">
+                <x-phosphor-house-light class="w-6 h-6 mb-1" />
+                <span>Home</span>
+            </a>
+            <button @click="createModalOpen = true"
+                class="flex flex-col items-center justify-center text-center p-3 text-sm font-semibold text-gray-600">
+                <x-eva-plus-outline class="w-6 h-6 mb-1" />
+                <span>Create</span>
+            </button>
+            <a href="{{ route('profile.show', auth()->user()) }}"
+                class="flex flex-col items-center justify-center text-center p-3 text-sm font-semibold {{ request()->routeIs('profile.show', auth()->user()) ? 'text-indigo-600' : 'text-gray-600' }}">
+                <img class="w-6 h-6 mb-1 object-cover rounded-full" src="{{ Auth::user()->avatar }}" alt="Your avatar">
+                <span>Profile</span>
+            </a>
+        </nav>
 
-        {{-- Modal untuk Create Post --}}
-        {{-- Atribut x-data DIHAPUS dari sini karena sudah dipindahkan ke atas --}}
+        {{-- Modal untuk Create Post (Tidak ada perubahan di sini) --}}
         <div x-show="createModalOpen" @keydown.escape.window="closeModal()" x-cloak
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-            <div @click.away="closeModal()" class="bg-white rounded-lg shadow-xl w-11/12 md:w-1/2 ">
-                {{-- ... Seluruh isi modal Anda (kode Anda di sini sudah benar) ... --}}
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+            x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+            <div @click.away="closeModal()"
+                class="bg-white rounded-lg shadow-xl w-11/12 md:w-1/2 lg:w-2/5 max-h-[90vh] overflow-y-auto"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 transform scale-90"
+                x-transition:enter-end="opacity-100 transform scale-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 transform scale-100"
+                x-transition:leave-end="opacity-0 transform scale-90">
                 <div class="px-4 py-3 border-b flex justify-between items-center">
-                    <h3 class="font-semibold text-lg">Create new post</h3>
-                    <button @click="closeModal()" class="text-gray-500 hover:text-gray-800">&times;</button>
+                    <h3 class="font-semibold text-lg"
+                        x-text="step === 3 ? 'Write a caption' : (step === 2 ? 'Crop Image' : 'Create new post')"></h3>
+                    <button x-show="step === 2" @click="cropAndProceed()"
+                        class="text-sm font-bold text-blue-500 hover:text-blue-600">Next</button>
+                    <button @click="closeModal()" class="text-gray-500 hover:text-gray-800 text-2xl leading-none"
+                        x-show="step !== 2">&times;</button>
                 </div>
                 <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="cropped_image" id="cropped-image-data">
                     <div class="p-6">
-                        <div x-show="step === 1" class="flex flex-col items-center justify-center text-center">
-                            <svg class="w-16 h-16 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 010-2.828L14 8m3 12l-4-4m4 4v-4m0 4h-4m-6-4l.75-1.5a.5.5 0 01.88-.13L16 16m-4-4l4 4m0 0l4-4m-4 4v4m0-4h4" />
+                        <div x-show="step === 1" class="flex flex-col items-center justify-center text-center py-10">
+                            <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            <p class="mt-4 text-xl text-gray-600">Drag photos and videos here</p>
+                            <p class="text-xl text-gray-600 mb-2">Select an image to start</p>
+                            <p class="text-sm text-gray-500 mb-4">Drag photos here or click to browse</p>
                             <label for="image-upload"
-                                class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600">Select
-                                from computer</label>
+                                class="px-6 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition">
+                                Select from computer
+                            </label>
                             <input id="image-upload" name="image" type="file" class="hidden"
-                                @change="handleFileSelect($event)" accept="image/*" required>
+                                @change="handleFileSelect($event)" accept="image/*">
                         </div>
-                        <div x-show="step === 2" class="flex flex-col md:flex-row md:space-x-4">
+                        <div x-show="step === 2">
+                            <div class="w-full">
+                                <img id="image-to-crop" :src="imageUrl" class="block max-w-full max-h-[450px]">
+                            </div>
+                        </div>
+                        <div x-show="step === 3" class="flex flex-col md:flex-row md:space-x-4">
                             <div class="md:w-1/2 mb-4 md:mb-0">
                                 <img :src="imageUrl" alt="Image preview"
-                                    class="rounded-lg object-cover w-full h-64">
+                                    class="rounded-lg object-cover ratio-4x3">
                             </div>
                             <div class="md:w-1/2">
-                                <div class="flex items-center space-x-3 mb-4"><img src="{{ Auth::user()->avatar }}"
-                                        alt="Your avatar" class="w-8 h-8 rounded-full object-cover"><span
-                                        class="font-semibold text-sm">{{ Auth::user()->username }}</span></div>
                                 <textarea name="caption" rows="6"
-                                    class="w-full border rounded-lg p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+                                    class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                     placeholder="Write a caption..."></textarea>
+                                @error('caption')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
-                    <div x-show="step === 2" class="px-4 py-3 border-t text-right"><button type="submit"
-                            class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Share</button></div>
+                    <div x-show="step === 3" class="px-4 py-3 border-t text-right">
+                        <button type="button" @click="closeModal()"
+                            class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 mr-2">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                            Share
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+    @stack('scripts')
 </body>
 
 </html>

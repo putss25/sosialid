@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Laravel\Facades\Image; // Perhatikan huruf 'a'
 
 class PostController extends Controller
@@ -17,32 +18,33 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
-        $validatedData = $request->validated();
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
+        // 1. Validasi input
+        $request->validated();
 
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
+        // 2. Proses data gambar Base64
+        $imageBase64 = $request->input('cropped_image');
+        // Pisahkan header dari data (misal: "data:image/jpeg;base64,")
+        [$type, $imageBase64] = explode(';', $imageBase64);
+        [, $imageBase64] = explode(',', $imageBase64);
+        // Decode data Base64 menjadi data biner gambar
+        $imageData = base64_decode($imageBase64);
 
-            // buat nama file unik
-            $filename = uniqid().'.'.$file->getClientOriginalExtension();
+        // Buat nama file unik
+        $filename = 'posts/'.uniqid().'.jpg';
 
-            // Baca file gambar
-            $image = Image::read($file);
+        // 3. Simpan file gambar ke storage
+        Storage::disk('public')->put($filename, $imageData);
 
-            $image->fit(1000, 1000);
+        // 4. Buat postingan di database
+        Auth::user()->posts()->create([
+            'image' => '/storage/'.$filename,
+            'caption' => $request->input('caption'),
+        ]);
 
-            $image->save(storage_path('app/public/posts/'.$filename));
-
-            // Set path gambar untuk disimpan ke database
-            $validatedData['image'] = '/storage/posts/'.$filename;
-        }
-
-        $user->posts()->create($validatedData);
-
+        // 5. Redirect
         return redirect()
-            ->route('profile.show', ['user' => $user->username])
-            ->with('status', 'Post created succesfully');
+            ->route('profile.show', ['user' =>  Auth::user()->username])
+            ->with('status', 'Post created successfully!');
     }
 
     public function show(Post $post)

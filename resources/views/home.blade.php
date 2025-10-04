@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="max-w-xl mx-auto mt-10">
+    <div class="max-w-xl mx-auto ">
         @if ($posts->count() > 0)
             @foreach ($posts as $post)
-                <div class="bg-white rounded-lg shadow-md mb-8">
+                <div class="bg-background rounded-lg shadow-md mb-8">
                     {{-- Header Post --}}
                     <div class="flex items-center p-4 border-b">
                         <a href="{{ route('profile.show', $post->user) }}">
@@ -29,9 +29,6 @@
 
 
                         <div class="p-4">
-                            {{-- Di sini nanti kita letakkan tombol Like & Comment --}}
-                            {{-- Aksi (Like, Comment) & Caption --}}
-                            <div class="">
                                 <div class="flex items-center space-x-4">
                                     @auth
                                         @if (auth()->user()->likes->contains($post))
@@ -90,7 +87,6 @@
                                         {{ $post->created_at->diffForHumans() }}
                                     </a>
                                 </div>
-                            </div>
                         </div>
                     </div>
             @endforeach
@@ -100,7 +96,7 @@
                 {{ $posts->links() }}
             </div>
         @else
-            <div class="text-center p-10 bg-white rounded-lg shadow-md">
+            <div class="text-center p-10 bg-background rounded-lg shadow-md">
                 <h2 class="text-2xl font-bold">Welcome to your Feed!</h2>
                 <p class="text-gray-500 mt-2">It's quiet here. Start following people to see their posts.</p>
             </div>
