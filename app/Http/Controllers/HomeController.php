@@ -18,6 +18,7 @@ class HomeController extends Controller
         $followingIds->push($user->id);
 
         $posts = Post::with('user') // eageer loading
+        ->withCount(['likes', 'comments'])
             ->whereIn('user_id', $followingIds)
             ->latest()  //shorcut buat orderby(created_at, desc)
             ->paginate(10);

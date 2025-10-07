@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-4xl mx-auto py-6">
         @if (session('status'))
             <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                 <span class="block sm:inline">{{ session('status') }}</span>
@@ -15,75 +15,74 @@
             <div class="w-3/4 ml-4">
                 <div class="flex items-center space-x-4">
                     <div class="flex items-center space-x-2"> {{-- Ubah div sebelumnya agar ada space-x-2 --}}
-                        <h1 class="text-2xl font-bold text-gray-800">{{ $user->username }}</h1>
+                        <h1 class="text-2xl font-bold text-foreground">{{ $user->username }}</h1>
 
                         @if ($user->is_verified)
-                            <span title="Verified account">
-                                <svg class="w-6 h-6 text-blue-500 fill-current" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.48 18.89l-4.47-4.47 1.41-1.41 3.06 3.06 6.36-6.36 1.41 1.41-7.77 7.77z" />
-                                </svg>
+                            <span title="Verified account" class="">
+                                <x-ri-verified-badge-fill class="w-7 h-7 text-primary" />
                             </span>
                         @endif
                     </div>
                     @if (Auth::user()->id === $user->id)
                         <a href="{{ route('profile.edit') }}"
-                            class="bg-gray-200 text-gray-800 font-semibold py-1 px-3 rounded-md text-sm">
+                            class="bg-muted-background text-foreground font-semibold py-1 px-3 rounded-md text-sm">
                             Edit Profile
                         </a>
                     @endif
                     @auth
-                        @if (auth()->user()->is($user))
-                            {{-- Jika ini adalah profil kita sendiri, tampilkan tombol Edit Profile --}}
-                            <a href="{{ route('profile.edit') }}"
-                                class="bg-gray-200 text-gray-800 font-semibold py-1 px-3 rounded-md text-sm">
-                                Edit Profile
-                            </a>
+                        {{-- ✅ SESUDAH (CEPAT) --}}
+                        @if ($isFollowing)
+                            {{-- Unfollow button --}}
+                            <form action="{{ route('profile.unfollow', $user) }}" method="POST">
+                                @csrf
+                                <button type="submit"
+                                    class="bg-gray-200 text-gray-800 font-semibold py-1 px-3 rounded-md text-sm">
+                                    Unfollow
+                                </button>
+                            </form>
                         @else
-                            {{-- Jika ini profil orang lain, tampilkan tombol Follow/Unfollow --}}
-                            @if (auth()->user()->following->contains($user))
-                                {{-- Jika SUDAH follow, tampilkan tombol Unfollow --}}
-                                <form action="{{ route('profile.unfollow', $user) }}" method="POST">
-                                    @csrf
-                                    <button type="submit"
-                                        class="bg-gray-200 text-gray-800 font-semibold py-1 px-3 rounded-md text-sm">
-                                        Unfollow
-                                    </button>
-                                </form>
-                            @else
-                                {{-- Jika BELUM follow, tampilkan tombol Follow --}}
-                                <form action="{{ route('profile.follow', $user) }}" method="POST">
-                                    @csrf
-                                    <button type="submit"
-                                        class="bg-blue-500 text-white font-semibold py-1 px-3 rounded-md text-sm hover:bg-blue-600">
-                                        Follow
-                                    </button>
-                                </form>
-                            @endif
+                            {{-- Follow button --}}
+                            <form action="{{ route('profile.follow', $user) }}" method="POST">
+                                @csrf
+                                <button type="submit"
+                                    class="bg-blue-500 text-white font-semibold py-1 px-3 rounded-md text-sm hover:bg-blue-600">
+                                    Follow
+                                </button>
+                            </form>
                         @endif
                     @endauth
                 </div>
-                <div class="flex space-x-6 mt-4">
-                    <div><span class="font-bold">0</span> posts</div>
-                    <div><span class="font-bold">0</span> followers</div>
-                    <div><span class="font-bold">0</span> following</div>
+                <div class="mt-4 flex space-x-6 sm:space-x-8 text-sm">
+                    <div>
+                        <span class="font-bold">{{ $user->posts_count }}</span>
+                        <span class="text-gray-500 dark:text-[--color-text-tertiary]">posts</span>
+                    </div>
+                    <div>
+                        <span class="font-bold">{{ $user->followers_count }}</span>
+                        <span class="text-gray-500 dark:text-[--color-text-tertiary]">followers</span>
+                    </div>
+                    <div>
+                        <span class="font-bold">{{ $user->following_count }}</span>
+                        <span class="text-gray-500 dark:text-[--color-text-tertiary]">following</span>
+                    </div>
                 </div>
                 <div class="mt-4">
                     <p class="font-bold">{{ $user->name }}</p>
-                    <p class="text-gray-600 mt-2 whitespace-pre-wrap">{{ $user->bio ?? 'This user has no bio yet' }}</p>
+                    <p class="text-muted-foreground mt-2 whitespace-pre-wrap">
+                        {{ $user->bio ?? 'This user has no bio yet' }}
+                    </p>
                 </div>
 
             </div>
         </div>
-        <hr class="my-8 border-gray-300">
+        <hr class="my-8 border-border">
         {{-- Galeri Postingan --}}
         <div>
             @if ($user->posts->isNotEmpty())
                 <div class="grid grid-cols-3 gap-1 sm:gap-4">
                     @foreach ($user->posts as $post)
                         <a href="{{ route('post.show', $post) }}"> {{-- Nanti ini akan ke halaman detail post --}}
-                            <div class="aspect-square">
+                            <div class="aspect-3/4">
                                 <img src="{{ $post->image }}" alt="{{ $post->caption }}"
                                     class="w-full h-full object-cover rounded-md">
                             </div>

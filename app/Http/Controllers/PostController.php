@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Laravel\Facades\Image; // Perhatikan huruf 'a'
@@ -86,5 +87,29 @@ class PostController extends Controller
         $post->delete();
 
         return redirect()->route('profile.show', $user->username)->with('status', 'post deleterd');
+    }
+
+    public function edit(Post $post)
+    {
+        return view('posts.edit', [
+            'post' => $post
+        ]);
+    }
+
+    public function update(Request $request, Post $post)
+    {
+         if (Auth::user()->id !== $post->user_id && !Auth::user()->is_admin) {
+            abort(403);
+        }
+
+        // Otorisasi: pastikan user boleh mengedit post ini
+
+        $validated = $request->validate([
+            'caption' => 'nullable|string|max:2200',
+        ]);
+
+        $post->update($validated);
+
+        return redirect()->route('post.show', $post)->with('status', 'Post updated successfully!');
     }
 }

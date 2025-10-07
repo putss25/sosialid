@@ -13,10 +13,26 @@ class ProfileController extends Controller
 {
     public function show(User $user)
     {
-        $user->load('posts');
-        return view('users.profile', [
-            'user' => $user,
-        ]);
+       $user->loadCount(['posts', 'followers', 'following']);
+
+    // ✅ Batasi posts yang di-load (ambil 30 terakhir saja)
+    $user->load(['posts' => function($query) {
+        $query->latest()->take(30);
+    }]);
+
+    // ✅ Cek following status tanpa load semua following
+    $isFollowing = false;
+    if (Auth::check()) {
+        $isFollowing = Auth::user()
+            ->following()
+            ->where('following_user_id', $user->id)
+            ->exists();
+    }
+
+    return view('users.profile', [
+        'user' => $user,
+        'isFollowing' => $isFollowing,
+    ]);
     }
 
     public function edit()
