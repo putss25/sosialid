@@ -24,7 +24,7 @@
                         @endif
                     </div>
                     @if (Auth::user()->id === $user->id)
-                        <a href="{{ route('profile.edit') }}"
+                        <a href="{{ route('settings.index') }}"
                             class="bg-muted-background text-foreground font-semibold py-1 px-3 rounded-md text-sm">
                             Edit Profile
                         </a>

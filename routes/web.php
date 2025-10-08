@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
@@ -14,15 +15,20 @@ use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['guest'])->group(function () {
-    Route::get('/register', [RegisterController::class, 'create']);
+    Route::get('/register', [RegisterController::class, 'create'])->name('register');
     Route::post('/register', [RegisterController::class, 'store']);
 
     Route::get('/login', [LoginController::class, 'create'])->name('login');
     Route::post('/login', [LoginController::class, 'store']);
-    Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+
 });
 
+Route::get('/verify-otp', [VerificationController::class, 'show'])->name('otp.show');
+Route::post('/verify-otp', [VerificationController::class, 'verify'])->name('otp.verify');
+Route::post('/resend-otp', [VerificationController::class, 'resend'])->name('otp.resend')->middleware('throttle:resend-otp');
+
 Route::middleware(['auth'])->group(function () {
+    Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -39,6 +45,9 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/post/{post}', [PostController::class, 'update'])->name('posts.update');
 
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
+
+
+
 
     Route::post('/profile/{user:username}/follow', [ProfileController::class, 'follow'])->name('profile.follow');
     Route::post('/profile/{user:username}/unfollow', [ProfileController::class, 'unfollow'])->name('profile.unfollow');

@@ -46,7 +46,7 @@ class ProfileController extends Controller
 
     public function update(UpdateProfileRequest $request)
     {
-        /** @var \App\Models\User $user */
+
         $user = Auth::user();
         $validatedData = $request->validated();
 

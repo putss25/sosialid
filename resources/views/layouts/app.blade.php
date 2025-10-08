@@ -114,6 +114,7 @@
             }, 300);
         }
     }" class="flex h-screen bg-background">
+    <x-notification />
 
         <aside class="hidden lg:flex flex-shrink-0  w-52 flex-col border-r border-border z-10">
             <div class="py-8 flex items-center  flex-shrink-0 px-4">
@@ -154,8 +155,8 @@
                         <div x-show="dropdownOpen" @click.away="dropdownOpen = false"
                             class="absolute bottom-full  -translate-y-4 left-2 mt-2 w-48 bg-muted-background rounded-md shadow-xl z-10 text-base"
                             x-cloak>
-                            <div class="px-4 py-3 text-foreground border-b border-border">
-                                {{ Auth::user()->username }}</div>
+                            {{-- <div class="px-4 py-3 text-foreground border-b border-border">
+                                {{ Auth::user()->username }}</div> --}}
                             <a href="{{ route('settings.index') }}"
                                 class=" block px-4 py-2 text-muted-foreground hover:bg-primary hover:text-white ">
                                 {{-- <x-elemplus-setting class="h-5 w-5" /> --}}

@@ -29,7 +29,7 @@ class LoginController extends Controller
         ])->onlyInput('email');
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request)   
     {
         Auth::logout();
 

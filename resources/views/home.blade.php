@@ -85,11 +85,6 @@
                                 </div>
                             @endisset
 
-
-
-
-                            {{-- Waktu Post --}}
-
                         </div>
                     </div>
             @endforeach

@@ -26,7 +26,9 @@ class User extends Authenticatable
         'password',
         'username',
         'bio',
-        'avatar'
+        'avatar',
+        'otp_code',
+        'otp_expires_at'
     ];
 
     /**
@@ -51,6 +53,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_verified' => 'boolean',
             'is_admin' => 'boolean',
+
         ];
     }
 

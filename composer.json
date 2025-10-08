@@ -19,7 +19,8 @@
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "mallardduck/blade-boxicons": "^2.4",
-        "owenvoke/blade-fontawesome": "^2.9"
+        "owenvoke/blade-fontawesome": "^2.9",
+        "spatie/image": "^3.8"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.16",
