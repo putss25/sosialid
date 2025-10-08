@@ -74,7 +74,7 @@ p {
 
     --accent: #FF6647;
     --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
+    --destructive: #e7000b;
     --destructive-foreground: oklch(0.577 0.245 27.325);
 
 }
@@ -113,8 +113,8 @@ html.dark {
     }
 }
 
-.cont {
-    @apply max-w-[1500px] mx-[4vw] sm:mx-[6vw] md:mx-[7vw] lg:mx-[8vh] 2xl:mx-[9vh]
+.container {
+    @apply mx-4 sm:mx-6 md:mx-8 lg:mx-12 xl:mx-16 2xl:mx-auto 2xl:max-w-6xl
 }
 
 .conp {

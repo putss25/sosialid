@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class CommentController extends Controller
 {
@@ -16,7 +17,7 @@ class CommentController extends Controller
         ]);
         // 2. Buat komentar menggunakan relasi
         $post->comments()->create([
-            'user_id' => auth()->id(),
+            'user_id' => FacadesAuth::id(),
             'body' => $validated['body'],
         ]);
 

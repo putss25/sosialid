@@ -19,17 +19,19 @@ class LoginController extends Controller
             'password' => 'required|min:6'
         ]);
 
-        if (Auth::attempt($credential)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/');
-        }
+
+
+         if (Auth::attempt($credential, $request->boolean('remember'))) {
+        $request->session()->regenerate();
+        return redirect()->intended('/');
+    }
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.'
         ])->onlyInput('email');
     }
 
-    public function destroy(Request $request)   
+    public function destroy(Request $request)
     {
         Auth::logout();
 

@@ -54,12 +54,13 @@
                             </span>
                         </div>
                     </div>
-
                     <!-- Error Messages -->
                     @error('email')
                         <p class="text-sm text-red-600">{{ $message }}</p>
                     @enderror
 
+                    <input type="checkbox" name="remember" id="remember">
+                    <label for="remember">Remember Me</label>
                     <!-- Submit Button -->
                     <div class="pt-2">
                         <button type="submit"
@@ -71,7 +72,7 @@
 
 
                 <p class="text-sm text-gray-500 mb-2">
-                Already have an account? <a href="/register" class="text-blue-600 hover:underline">Sign in</a>
+                    Already have an account? <a href="/register" class="text-blue-600 hover:underline">Sign in</a>
                 </p>
             </div>
         </div>
@@ -86,12 +87,7 @@
             <!-- Content -->
             <div class="relative z-10 text-white max-w-lg">
                 <div class="w-16 h-16 p-4 bg-primary rounded-full flex items-center justify-center mb-8 shadow-lg">
-                    {{-- <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
-                        </path>
-                    </svg> --}}
-                    {{-- <p class="text-5xl">"</p> --}}
+
                     <x-fas-quote-left />
                 </div>
 

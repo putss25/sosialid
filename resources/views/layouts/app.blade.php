@@ -186,7 +186,7 @@
                 <img src="/images/snapi.svg" class="w-[15%] max-w-[100px]" alt="">
             </header>
 
-            <main class="flex-1 overflow-x-hidden overflow-y-auto  pb-16 lg:pb-0">
+            <main class="flex-1 overflow-x-hidden overflow-y-auto  pb-24 lg:pb-0">
                 @yield('content')
             </main>
         </div>
