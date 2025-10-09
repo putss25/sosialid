@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         /** @var \App\Models\User $user */ //
         $user = Auth::user();
@@ -21,9 +21,9 @@ class HomeController extends Controller
         ->withCount(['likes', 'comments'])
             ->whereIn('user_id', $followingIds)
             ->latest()  //shorcut buat orderby(created_at, desc)
-            ->paginate(10);
+            ->paginate(20);
 
-        // dd($posts);
+
 
         return view('home', [
             'posts' => $posts

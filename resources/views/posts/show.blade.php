@@ -194,8 +194,18 @@
                                     d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
                             </svg>
                         </a>
-                        {{-- Tombol Comment (Placeholder) --}}
-                        <a href="{{ route('post.show', $post) }}">
+                        {{-- Tombol Comment --}}
+                        <button
+                            @click="
+        navigator.clipboard.writeText('{{ route('post.show', $post) }}');
+
+        window.dispatchEvent(new CustomEvent('toast-notification', {
+            detail: {
+                type: 'success',
+                message: 'Link copied to clipboard!'
+            }
+        }));
+    ">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="lucide lucide-send-horizontal-icon lucide-send-horizontal">
@@ -203,7 +213,7 @@
                                     d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z" />
                                 <path d="M6 12h16" />
                             </svg>
-                        </a>
+                        </button>
                     </div>
 
                     {{-- Jumlah Like --}}
