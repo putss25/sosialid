@@ -17,13 +17,15 @@ class PostController extends Controller
         return view('posts.create');
     }
 
-    public function store(StorePostRequest $request)
+    public function store(Request $request)
     {
         // 1. Validasi input
-        $request->validated();
+        $validatedData = $request->validate([
+            'cropped_image' => 'required|string',
+            'caption' => 'nullable|string|max:2200']);
 
         // 2. Proses data gambar Base64
-        $imageBase64 = $request->input('cropped_image');
+        $imageBase64 = $request->cropped_image;
         // Pisahkan header dari data (misal: "data:image/jpeg;base64,")
         [$type, $imageBase64] = explode(';', $imageBase64);
         [, $imageBase64] = explode(',', $imageBase64);
@@ -39,7 +41,7 @@ class PostController extends Controller
         // 4. Buat postingan di database
         Auth::user()->posts()->create([
             'image' => '/storage/'.$filename,
-            'caption' => $request->input('caption'),
+            'caption' => $request->caption,
         ]);
 
         // 5. Redirect
@@ -59,7 +61,6 @@ class PostController extends Controller
 
     public function like(Post $post)
     {
-        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         $user->likes()->attach($post);

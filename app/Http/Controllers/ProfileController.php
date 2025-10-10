@@ -66,7 +66,6 @@ class ProfileController extends Controller
 
     public function follow(User $User)
     {
-        /** @var \App\Models\User $user */
 
         $user = Auth::user();
         $user->following()->attach($User);
@@ -74,7 +73,6 @@ class ProfileController extends Controller
     }
     public function unfollow(User $User)
     {
-        /** @var \App\Models\User $user */
         $user = Auth::user();
         $user->following()->detach($User);
         return back()->with('status', 'You are now unfollowing bro' . $User->username);

@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\UsersController;
-use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -59,8 +60,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 
-
-
+    Route::get('/explore', [ExploreController::class, 'index'])->name('explore.index');
+    Route::get('/explore/posts', [ExploreController::class, 'posts'])->name('explore.posts');
 
     Route::post('/profile/{user:username}/follow', [ProfileController::class, 'follow'])->name('profile.follow');
     Route::post('/profile/{user:username}/unfollow', [ProfileController::class, 'unfollow'])->name('profile.unfollow');

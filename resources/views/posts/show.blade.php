@@ -3,12 +3,21 @@
 @section('content')
     <div class="flex lg:h-[100vh] justify-center items-center ">
 
-        <div
-            class="lg:h-[80%] mx-auto mt-10 bg-background rounded-lg shadow-none lg:shadow-lg flex flex-col lg:flex-row h-fit ">
-            <div class="flex justify-between lg:hidden items-center pb-4 border-gray-200">
+        <button onclick="history.back()"
+            class="absolute top-8 right-10 text-foreground bg-background/20 size-7 rounded-full rounded-tl-lg backdrop-blur-lg"><svg
+                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-x-icon lucide-x">
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+            </svg></button>
+        <div @click="histroy.back()" @keydown.escape.window="history.back()"
+            class="lg:h-[80%] relative mx-auto mt-10 bg-background rounded-lg shadow-none lg:shadow-lg flex flex-col lg:flex-row h-fit ">
+
+            <div class="flex justify-between lg:hidden items-center pb-4 ">
                 <div class="flex items-center">
                     <a href="{{ route('profile.show', $post->user) }}">
-                        <img src="{{ $post->user->avatar }}" alt="{{ $post->user->username }}'s avatar"
+                        / <img src="{{ $post->user->avatar }}" alt="{{ $post->user->username }}'s avatar"
                             class="w-10 h-10 rounded-full object-cover">
                     </a>
                     <div class="ml-4">
@@ -43,7 +52,7 @@
                                 x-transition:leave="transition ease-in duration-75"
                                 x-transition:leave-start="transform opacity-100 scale-100"
                                 x-transition:leave-end="transform opacity-0 scale-95"
-                                class="absolute right-0 mt-2 w-48 bg-white dark:bg-[--color-surface] rounded-md shadow-xl z-20 origin-top-right ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                class="absolute right-0 mt-2 w-48 bg-muted-background rounded-md shadow-xl z-20 origin-top-right  shadow-md focus:outline-none"
                                 x-cloak>
                                 <div class="py-1" role="menu" aria-orientation="vertical">
                                     <button
@@ -52,7 +61,7 @@
                         copied = true;
                         setTimeout(() => copied = false, 2000);
                         open = false;
-                    "
+                        "
                                         class="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-[--color-text-secondary] hover:bg-gray-100 dark:hover:bg-[--color-surface-hover]">
                                         <span x-show="!copied">Copy Link</span>
                                         <span x-show="copied" class="text-green-500 font-semibold">Copied!</span>
@@ -85,7 +94,6 @@
             <div class="relative">
                 <img src="{{ $post->image }}" alt="{{ $post->caption }}"
                     class="w-full h-full object-cover rounded-l-lg min-w-full">
-                <div class="absolute top-1 left-1 backdrop-blur-2xl bg-white">X</div>
             </div>
 
             {{-- Kolom Informasi --}}
@@ -106,15 +114,60 @@
                             {{ $post->created_at->diffForHumans() }}
                         </a>
                     </div>
-                    @if (auth()->check() && auth()->user()->id === $post->user_id)
-                        <form action="{{ route('posts.destroy', $post) }}" method="POST" class="ml-auto">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-500 font-semibold text-sm"
-                                onclick="return confirm('Are you sure you want to delete this post?')">
-                                Delete
+                    {{-- DROPDOWN BTN --}}
+                    @if (auth()->check() && (auth()->user()->id === $post->user_id || auth()->user()->is_admin))
+                        <div x-data="{ open: false, copied: false }" class="relative ml-auto">
+                            {{-- Tombol Pemicu Dropdown (Ikon Tiga Titik) --}}
+                            <button @click="open = !open"
+                                class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                </svg>
                             </button>
-                        </form>
+
+                            {{-- Panel Dropdown --}}
+                            <div x-show="open" @click.away="open = false"
+                                x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="transform opacity-0 scale-95"
+                                x-transition:enter-end="transform opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-75"
+                                x-transition:leave-start="transform opacity-100 scale-100"
+                                x-transition:leave-end="transform opacity-0 scale-95"
+                                class="absolute right-0 mt-2 w-48 bg-muted-background rounded-md shadow-xl z-20 origin-top-right  shadow-md focus:outline-none"
+                                x-cloak>
+                                <div class="py-1" role="menu" aria-orientation="vertical">
+                                    <button
+                                        @click="
+                        navigator.clipboard.writeText('{{ route('post.show', $post) }}');
+                        copied = true;
+                        setTimeout(() => copied = false, 2000);
+                        open = false;
+                        "
+                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-[--color-text-secondary] hover:bg-gray-100 dark:hover:bg-[--color-surface-hover]">
+                                        <span x-show="!copied">Copy Link</span>
+                                        <span x-show="copied" class="text-green-500 font-semibold">Copied!</span>
+                                    </button>
+
+                                    <a href="{{ route('posts.edit', $post) }}"
+                                        class="block px-4 py-2 text-sm text-gray-700 dark:text-[--color-text-secondary] hover:bg-gray-100 dark:hover:bg-[--color-surface-hover]"
+                                        role="menuitem">
+                                        Edit
+                                    </a>
+
+                                    <form action="{{ route('posts.destroy', $post) }}" method="POST" role="menuitem">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-[--color-surface-hover]"
+                                            onclick="return confirm('Are you sure you want to delete this post?')">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     @endif
                 </div>
 
@@ -197,15 +250,14 @@
                         {{-- Tombol Comment --}}
                         <button
                             @click="
-        navigator.clipboard.writeText('{{ route('post.show', $post) }}');
+                                navigator.clipboard.writeText('{{ route('post.show', $post) }}');
 
-        window.dispatchEvent(new CustomEvent('toast-notification', {
-            detail: {
-                type: 'success',
-                message: 'Link copied to clipboard!'
-            }
-        }));
-    ">
+                                window.dispatchEvent(new CustomEvent('toast-notification', {
+                                    detail: {
+                                        type: 'success',
+                                        message: 'Link copied to clipboard!'
+                                    }
+                                }));">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="lucide lucide-send-horizontal-icon lucide-send-horizontal">
@@ -242,13 +294,13 @@
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                                 <button type="submit"
-                                    class=" px-4 py-1 bg-blue-500 text-white text-sm font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">Post</button>
+                                    class=" px-4 py-1 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-75">Post</button>
                             </div>
                         </form>
                     @endauth
                     @guest
                         <p class="text-sm text-muted-foreground">
-                            <a href="{{ route('login') }}" class="text-blue-500 font-semibold">Log in</a> to post a comment.
+                            <a href="{{ route('login') }}" class="text-primary font-semibold">Log in</a> to post a comment.
                         </p>
                     @endguest
                 </div>

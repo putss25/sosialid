@@ -20,50 +20,61 @@ class SettingsController extends Controller
 /**
 * Menyimpan postingan baru ke database (versi sederhana tanpa crop).
 */
-public function updateProfile(Request $request)
-{
-     $user = $request->user();
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
 
-    // Lakukan validasi langsung di sini menggunakan validateWithBag
-    $validatedData = $request->validateWithBag('updateProfile', [
-      'name' => ['required', 'string', 'max:255'],
+        $validatedData = $request->validateWithBag('updateProfile', [
+            'name' => ['required', 'string', 'max:255'],
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                'alpha_dash',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+        ]);
 
-        // TAMBAHKAN ATURAN BARU UNTUK USERNAME
-        'username' => [
-            'required',
-            'string',
-            'max:255',
-            'alpha_dash', // Hanya boleh huruf, angka, strip (-), dan underscore (_)
-            Rule::unique('users')->ignore($user->id), // Harus unik, kecuali untuk user ini sendiri
-        ],
+        // Upload avatar
+        if ($request->hasFile('avatar')) {
+            // Hapus avatar lama (kecuali default)
+            if ($user->avatar && $user->avatar !== '/images/default-avatar.png') {
+                $oldPath = $user->avatar;
+                // dd($oldPath);
 
-        'email' => [
-            'required',
-            'string',
-            'email',
-            'max:255',
-            Rule::unique('users')->ignore($user->id),
-        ],
-        'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
-    ]);
 
-    // --- Logika upload avatar ---
-    if ($request->hasFile('avatar')) {
-        if ($user->avatar && $user->avatar != '/images/default-avatar.png' && Storage::disk('public')->exists(str_replace('/storage/', '', $user->avatar))) {
-            Storage::disk('public')->delete(str_replace('/storage/', '', $user->avatar));
+                // Buang base URL jika ada
+                $oldPath = str_replace(url('/storage/'), '', $oldPath);
+                $oldPath = str_replace('http://localhost:8000/storage/', '', $oldPath);
+                $oldPath = str_replace('/storage/', '', $oldPath);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+
+            // Upload avatar baru
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $validatedData['avatar'] =  $path;
+        } else {
+            // Jangan update avatar jika tidak ada file baru
+            unset($validatedData['avatar']);
         }
-        $path = $request->file('avatar')->store('avatars', 'public');
-        $validatedData['avatar'] = '/' . $path;
+
+        $user->update($validatedData);
+
+        return back()->with('notification', [
+            'type' => 'success',
+            'message' => 'Profile information updated successfully!'
+        ]);
     }
-
-    // --- Update data user ---
-    $user->update($validatedData);
-
-    return back()->with('notification', [
-    'type' => 'success', // Varian notifikasi: 'success', 'error', 'info', 'warning'
-    'message' => 'Profile information updated successfully!' // Isi pesan
-]);
-}
 
     public function updatePassword(Request $request)
     {

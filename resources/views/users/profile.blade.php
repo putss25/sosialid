@@ -45,7 +45,7 @@
                             <form action="{{ route('profile.follow', $user) }}" method="POST">
                                 @csrf
                                 <button type="submit"
-                                    class="bg-blue-500 text-white font-semibold py-1 px-3 rounded-md text-sm hover:bg-blue-600">
+                                    class="bg-primary text-white font-semibold py-1 px-3 rounded-md text-sm hover:bg-primary-hover">
                                     Follow
                                 </button>
                             </form>

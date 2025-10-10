@@ -10,7 +10,6 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        /** @var \App\Models\User $user */ //
         $user = Auth::user();
         // 1. Dapatkan ID dari user yang sedang kita follow
         $followingIds = $user->following()->pluck('users.id');

@@ -6,13 +6,13 @@
         avatarModalOpen: false,
         avatarImageUrl: null,
         cropperInstance: null,
-
+    
         handleAvatarFileSelect(event) {
             const file = event.target.files[0];
             if (file) {
                 this.avatarImageUrl = URL.createObjectURL(file);
                 this.avatarModalOpen = true;
-
+    
                 this.$nextTick(() => {
                     if (this.cropperInstance) {
                         this.cropperInstance.destroy();
@@ -26,33 +26,30 @@
                 });
             }
         },
-
+    
         cropAvatar() {
             if (this.cropperInstance) {
                 const croppedCanvas = this.cropperInstance.getCroppedCanvas({
                     width: 400,
                     height: 400
                 });
-
-                // Convert canvas to blob dan set ke file input
+    
                 croppedCanvas.toBlob((blob) => {
                     // Update preview
                     const previewUrl = URL.createObjectURL(blob);
                     document.getElementById('avatar-preview').src = previewUrl;
-
-                    // Buat File object
+    
+                    // Buat File object dan set ke file input
                     const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
-
-                    // Set ke file input
                     const dataTransfer = new DataTransfer();
                     dataTransfer.items.add(file);
                     document.getElementById('avatar-upload').files = dataTransfer.files;
-
+    
                     this.closeAvatarModal();
                 }, 'image/jpeg', 0.9);
             }
         },
-
+    
         closeAvatarModal() {
             this.avatarModalOpen = false;
             if (this.cropperInstance) {
@@ -106,12 +103,12 @@
                                     class="px-4 py-2 border border-[--color-border] rounded-md text-sm font-medium text-[--color-text] hover:bg-[--color-surface-hover] cursor-pointer">
                                     Change
                                 </label>
-                                <input id="avatar-upload" type="file" class="hidden"
+                                <input id="avatar-upload" name="avatar" type="file" class="hidden"
                                     @change="handleAvatarFileSelect($event)" accept="image/*">
                             </div>
 
                             {{-- Hidden input untuk menyimpan data cropped avatar (Base64) --}}
-                            <input type="hidden" name="avatar" id="cropped-avatar-data">
+                            {{-- <input type="hidden" name="avatar" id="cropped-avatar-data"> --}}
 
                             @error('avatar', 'updateProfile')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
