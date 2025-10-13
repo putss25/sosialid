@@ -23,5 +23,10 @@ class CommentController extends Controller
 
         // 3. Redirect kembali ke halaman sebelumnya
         return back()->with('status', 'Comment posted!');
+
+        return back()->with('notification', [
+            'type' => 'success',
+            'message' => 'Comment posted!'
+        ]);
     }
 }

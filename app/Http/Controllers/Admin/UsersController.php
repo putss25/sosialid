@@ -9,9 +9,19 @@ use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
-      public function users()
+    public function users(Request $request)
     {
-        $users = User::latest()->paginate(20);
+        $query = User::query();
+
+        if($request->has('q')){
+            $search = $request->input('q');
+            $query->where(function($q) use ($search){
+                $q->where('name', 'like', "%${search}%")
+                ->orWhere('username', 'like', "%${search}%");
+            });
+        }
+
+        $users = $query->latest()->paginate(20)->withQueryString();
         return view('admin.users', [
             'users' => $users,
         ]);
@@ -21,7 +31,21 @@ class UsersController extends Controller
         $user->is_verified = true;
         $user->save();
 
-        return back()->with('status', 'user' . $user->username . 'Has bean verified');
+        return back()->with('notification', [
+            'type' => 'success',
+            'message' => 'user' . $user->username . 'Has bean verified'
+        ]);
+    }
+    public function unverifyUser(User $user)
+    {
+        $user->is_verified = false;
+        $user->email_verified_at = null; // Set kolom verifikasi email menjadi null
+        $user->save();
+
+        return back()->with('notification', [
+            'type' => 'error',
+            'message' => 'user' . $user->username . 'Has bean unverified!'
+        ]);
     }
     public function deleteUser(User $user)
     {
@@ -30,7 +54,10 @@ class UsersController extends Controller
         }
           $user->delete();
 
-    return back()->with('status', 'User "' . $user->username . '" has been deleted!');
+        return back()->with('notification', [
+            'type' => 'error',
+            'message' => 'status', 'User "' . $user->username . '" has been deleted!'
+        ]);
     }
 
 }

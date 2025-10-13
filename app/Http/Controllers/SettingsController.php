@@ -41,6 +41,8 @@ class SettingsController extends Controller
                 Rule::unique('users')->ignore($user->id),
             ],
             'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'bio' => 'nullable|string|max:1000',
+
         ]);
 
         // Upload avatar
@@ -87,7 +89,11 @@ class SettingsController extends Controller
         'password' => Hash::make($validated['new_password']),
      ]);
 
-     return back()->with('status-password', 'Password updated succesfully');
+     return back()->with('notification', [
+            'type' => 'success',
+            'message' => 'Password updated succesfully'
+        ]);
+
     }
 
 }

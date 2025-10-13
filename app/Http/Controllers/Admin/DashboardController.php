@@ -36,12 +36,27 @@ class DashboardController extends Controller
             $userGrowthData['data'][] = $count;
         }
 
+         // 1. Ambil 5 Postingan Paling Populer (berdasarkan jumlah like)
+    $popularPosts = Post::with('user') // Eager load data user-nya
+                          ->withCount('likes') // Hitung jumlah relasi 'likes'
+                          ->orderBy('likes_count', 'desc') // Urutkan berdasarkan 'likes_count'
+                          ->take(5) // Ambil 5 teratas
+                          ->get();
+
+    // 2. Ambil 5 Pengguna Paling Aktif (berdasarkan jumlah post)
+    $activeUsers = User::withCount('posts') // Hitung jumlah relasi 'posts'
+                         ->orderBy('posts_count', 'desc') // Urutkan berdasarkan 'posts_count'
+                         ->take(5) // Ambil 5 teratas
+                         ->get();
+
         return view('admin.dashboard', [
             'totalUsers' => $totalUsers,
             'newUsersToday' => $newUsersToday,
             'totalPosts' => $totalPosts,
             'newPostsToday' => $newPostsToday,
-            'userGrowthData' => $userGrowthData
+            'userGrowthData' => $userGrowthData,
+            'popularPosts' => $popularPosts,
+            'activeUsers' => $activeUsers,
         ]);
     }
 

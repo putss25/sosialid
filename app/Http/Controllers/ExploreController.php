@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ExploreController extends Controller
 {
-    public function index()
+    public function users()
     {
         // 1. Ambil ID dari semua user yang sudah kita ikuti
         $followingIds = Auth::user()->following()->pluck('id');
@@ -23,7 +23,9 @@ class ExploreController extends Controller
                                 ->inRandomOrder()
                                 ->paginate(24);
 
-        return view('explore.index', [
+
+
+        return view('explore.users', [
             'users' => $usersToDiscover,
         ]);
     }
@@ -46,6 +48,8 @@ class ExploreController extends Controller
                                ->whereNotIn('id', $excludePostIds)
                                ->latest() // Urutkan dari yang terbaru
                                ->paginate(18); // Paginasi, 18 post per halaman
+
+        $postsToDiscover->load('user')->loadCount(['likes', 'comments']);
 
         return view('explore.posts', [
             'posts' => $postsToDiscover,

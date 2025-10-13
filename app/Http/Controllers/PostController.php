@@ -47,12 +47,16 @@ class PostController extends Controller
         // 5. Redirect
         return redirect()
             ->route('profile.show', ['user' =>  Auth::user()->username])
-            ->with('status', 'Post created successfully!');
+             ->with('notification', [
+            'type' => 'success',
+            'message' => 'Post created successfully'
+        ]);
     }
 
     public function show(Post $post)
     {
-        $post->with('comments.user');
+         $post->load(['user', 'comments.user']) // Memperbaiki with() menjadi load() untuk memuat komentar
+         ->loadCount(['likes', 'comments']);      // Menghitung jumlah likes secara efisien
 
         return view('posts.show', [
             'post' => $post,
@@ -87,11 +91,17 @@ class PostController extends Controller
         }
         $post->delete();
 
-        return redirect()->route('profile.show', $user->username)->with('status', 'post deleterd');
+        return redirect()->route('profile.show', $user->username)->with('notification', [
+            'type' => 'error',
+            'message' => 'Post Deleted'
+        ]);
     }
 
     public function edit(Post $post)
     {
+       if (Auth::user()->id !== $post->user_id && !Auth::user()->is_admin) {
+            abort(403);
+        }
         return view('posts.edit', [
             'post' => $post
         ]);
@@ -111,6 +121,9 @@ class PostController extends Controller
 
         $post->update($validated);
 
-        return redirect()->route('post.show', $post)->with('status', 'Post updated successfully!');
+        return redirect()->route('post.show', $post)->with('notification', [
+            'type' => 'success',
+            'message' => 'Post update successfully'
+        ]);
     }
 }

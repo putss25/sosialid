@@ -52,7 +52,7 @@
                                 x-transition:leave="transition ease-in duration-75"
                                 x-transition:leave-start="transform opacity-100 scale-100"
                                 x-transition:leave-end="transform opacity-0 scale-95"
-                                class="absolute right-0 mt-2 w-48 bg-muted-background rounded-md shadow-xl z-20 origin-top-right  shadow-md focus:outline-none"
+                                class="absolute right-0 mt-2 w-48 bg-muted-background rounded-md shadow-xl z-20 origin-top-right  focus:outline-none"
                                 x-cloak>
                                 <div class="py-1" role="menu" aria-orientation="vertical">
                                     <button
@@ -173,9 +173,9 @@
 
 
                 {{-- Garis Pemisah --}}
-                @if ($post->comments->isNotEmpty() && $post->caption)
+                {{-- @if ($post->comments->isNotEmpty() && $post->caption)
                     <hr class="my-4 border-border">
-                @endif
+                @endif --}}
 
                 {{-- SEMUA COMMENT Post --}}
                 <div class="space-y-4 h-60 lg:h-full mt-8 overflow-y-auto w-full overflow-x-hidden ">
@@ -209,10 +209,9 @@
                                     class="h-fit flex items-center">
                                     @csrf
                                     <button type="submit">
-                                        {{-- <x-lucide-activity /> --}}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="red" stroke="red" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round">
+                                            viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round" class="fill-accent stroke-accent">
                                             <path
                                                 d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
                                         </svg>
@@ -268,9 +267,19 @@
                         </button>
                     </div>
 
-                    {{-- Jumlah Like --}}
-                    <div class="font-bold text-sm mt-2 text-foreground">
-                        {{ $post->likes->count() }} {{ Str::plural('like', $post->likes->count()) }}
+                    <div class="flex gap-2 items-center mt-2">
+
+                        {{-- Jumlah Like --}}
+                        <div class="font-bold text-sm  ">
+                            {{ $post->likes_count }} {{ Str::plural('like', $post->likes_count) }}
+                        </div>
+                        <span class="text-sm">|</span>
+
+                        {{-- Jumlah Coment --}}
+                        <div class="font-bold text-sm  ">
+                            {{ $post->comments_count }} {{ Str::plural('Comment', $post->comments_count) }}
+                        </div>
+
                     </div>
 
                     {{-- Caption --}}

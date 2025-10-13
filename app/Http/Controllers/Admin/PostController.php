@@ -22,6 +22,9 @@ class PostController extends Controller
 
 
 
-        return back()->with('status', 'Post has been deleted by admin');
+        return back()->with('notification', [
+            'type' => 'error',
+            'message' => 'Profile information updated successfully!'
+        ]);
     }
 }

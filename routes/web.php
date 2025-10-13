@@ -60,7 +60,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 
-    Route::get('/explore', [ExploreController::class, 'index'])->name('explore.index');
+    Route::get('/explore/users', [ExploreController::class, 'users'])->name('explore.users');
     Route::get('/explore/posts', [ExploreController::class, 'posts'])->name('explore.posts');
 
     Route::post('/profile/{user:username}/follow', [ProfileController::class, 'follow'])->name('profile.follow');
@@ -82,6 +82,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/users', [UsersController::class, 'users'])->name('users.index');
 
     Route::patch('/users/{user}/verify', [UsersController::class, 'verifyUser'])->name('users.verify');
+    Route::patch('/users/{user}/unverify', [UsersController::class, 'unverifyUser'])->name('users.unverify');
     Route::delete('/users/{user}', [UsersController::class, 'deleteUser'])->name('users.destroy');
 
     Route::get('/posts', [AdminPostController::class, 'posts'])->name('posts.index');

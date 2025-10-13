@@ -4,17 +4,16 @@
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         <h1 class="text-2xl font-semibold mb-6">User Management</h1>
 
-        {{-- Notifikasi --}}
-        @if (session('status'))
-            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                <span class="block sm:inline">{{ session('status') }}</span>
+        {{-- FORM PENCARIAN BARU --}}
+        <form method="GET" action="{{ route('admin.users.index') }}" class="mb-4">
+            <div class="relative">
+                <input type="text" name="q" placeholder="Search by name, username, or email..."
+                    value="{{ request('q') }}" class="w-full pl-10 pr-4 py-2 border rounded-lg">
+                <div class="absolute top-0 left-0 inline-flex items-center p-2">
+                    <svg class="w-6 h-6 text-gray-400" ...></svg> {{-- ikon search --}}
+                </div>
             </div>
-        @endif
-        @if (session('error'))
-            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                <span class="block sm:inline">{{ session('error') }}</span>
-            </div>
-        @endif
+        </form>
 
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
             <table class="min-w-full divide-y divide-gray-200">
@@ -34,8 +33,18 @@
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $user->username }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $user->email }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center space-x-2">
-                                @if (!$user->is_verified)
+                            {{-- resources/views/admin/users.blade.php --}}
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center space-x-4">
+                                @if ($user->is_verified)
+                                    {{-- Jika sudah terverifikasi, tampilkan tombol Unverify --}}
+                                    <form action="{{ route('admin.users.unverify', $user) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit"
+                                            class="text-yellow-600 hover:text-yellow-900">Unverify</button>
+                                    </form>
+                                @else
+                                    {{-- Jika belum terverifikasi, tampilkan tombol Verify --}}
                                     <form action="{{ route('admin.users.verify', $user) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
@@ -43,6 +52,7 @@
                                     </form>
                                 @endif
 
+                                {{-- Tombol Delete (tetap sama) --}}
                                 @if (!$user->is_admin && $user->id !== auth()->id())
                                     <form action="{{ route('admin.users.destroy', $user) }}" method="POST">
                                         @csrf
@@ -50,9 +60,6 @@
                                         <button type="submit" class="text-red-600 hover:text-red-900"
                                             onclick="return confirm('Are you sure?')">Delete</button>
                                     </form>
-                                @endif
-                                @if (auth()->id() === $user->id)
-                                    <p class="text-red-500">You cannot delete you own acoount</p>
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">

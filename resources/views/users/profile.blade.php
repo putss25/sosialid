@@ -19,16 +19,17 @@
 
                         @if ($user->is_verified)
                             <span title="Verified account" class="">
-                                <x-ri-verified-badge-fill class="w-7 h-7 text-primary" />
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-check-icon lucide-check bg-primary rounded-full text-white p-1">
+                                    <path d="M20 6 9 17l-5-5" />
+                                </svg>
+
                             </span>
                         @endif
                     </div>
-                    @if (Auth::user()->id === $user->id)
-                        <a href="{{ route('settings.index') }}"
-                            class="bg-muted-background text-foreground font-semibold py-1 px-3 rounded-md text-sm">
-                            Edit Profile
-                        </a>
-                    @endif
+
                     @auth
                         {{-- ✅ SESUDAH (CEPAT) --}}
                         @if ($isFollowing)
@@ -68,9 +69,18 @@
                 </div>
                 <div class="mt-4">
                     <p class="font-bold">{{ $user->name }}</p>
-                    <p class="text-muted-foreground mt-2 whitespace-pre-wrap">
+                    <p class="text-muted-foreground mt-2 break-words">
                         {{ $user->bio ?? 'This user has no bio yet' }}
                     </p>
+                </div>
+
+                <div class="mt-4">
+                    @if (Auth::user()->id === $user->id)
+                        <a href="{{ route('settings.index') }}"
+                            class="bg-muted-background text-foreground font-semibold py-1 px-3 rounded-md text-md">
+                            Edit Profile
+                        </a>
+                    @endif
                 </div>
 
             </div>
@@ -78,16 +88,37 @@
         <hr class="my-8 border-border">
         {{-- Galeri Postingan --}}
         <div>
-            @if ($user->posts->isNotEmpty())
+            @if ($posts->isNotEmpty())
                 <div class="grid grid-cols-3 gap-1 sm:gap-4">
-                    @foreach ($user->posts as $post)
-                        <a href="{{ route('post.show', $post) }}"> {{-- Nanti ini akan ke halaman detail post --}}
+                    @foreach ($posts as $post)
+                        {{-- Card --}}
+                        <a href="{{ route('post.show', $post) }}" class="group relative overflow-hidden">
+                            {{-- Nanti ini akan ke halaman detail post --}}
                             <div class="aspect-3/4">
                                 <img src="{{ $post->image }}" alt="{{ $post->caption }}"
-                                    class="w-full h-full object-cover rounded-md">
+                                    class="w-full h-full object-cover  ">
+
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-b from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <div class="p-5 text-white">
+                                        {{-- <p class="font-semibold text-lg">{{ $post->user->username }}</p> --}}
+                                        <div class="flex flex-col   text-sm mt-2">
+                                            <span>
+                                                {{ $post->likes_count }} {{ Str::plural('like', $post->likes_count) }}
+                                            </span>
+                                            <span>
+                                                {{ $post->comments_count }}
+                                                {{ Str::plural('Comment', $post->comments_count) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </a>
                     @endforeach
+                </div>
+                <div class="mt-8">
+                    {{ $posts->links() }}
                 </div>
             @else
                 <div class="text-center py-10">

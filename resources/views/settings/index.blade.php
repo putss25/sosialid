@@ -6,13 +6,13 @@
         avatarModalOpen: false,
         avatarImageUrl: null,
         cropperInstance: null,
-    
+
         handleAvatarFileSelect(event) {
             const file = event.target.files[0];
             if (file) {
                 this.avatarImageUrl = URL.createObjectURL(file);
                 this.avatarModalOpen = true;
-    
+
                 this.$nextTick(() => {
                     if (this.cropperInstance) {
                         this.cropperInstance.destroy();
@@ -26,30 +26,30 @@
                 });
             }
         },
-    
+
         cropAvatar() {
             if (this.cropperInstance) {
                 const croppedCanvas = this.cropperInstance.getCroppedCanvas({
                     width: 400,
                     height: 400
                 });
-    
+
                 croppedCanvas.toBlob((blob) => {
                     // Update preview
                     const previewUrl = URL.createObjectURL(blob);
                     document.getElementById('avatar-preview').src = previewUrl;
-    
+
                     // Buat File object dan set ke file input
                     const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
                     const dataTransfer = new DataTransfer();
                     dataTransfer.items.add(file);
                     document.getElementById('avatar-upload').files = dataTransfer.files;
-    
+
                     this.closeAvatarModal();
                 }, 'image/jpeg', 0.9);
             }
         },
-    
+
         closeAvatarModal() {
             this.avatarModalOpen = false;
             if (this.cropperInstance) {
@@ -118,7 +118,7 @@
                             <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
                             <input type="text" name="name" id="name"
                                 value="{{ old('name', auth()->user()->name) }}"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                class="mt-1 p-1 block w-full border-gray-300 rounded-md shadow-sm">
                             @error('name', 'updateProfile')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -127,7 +127,7 @@
                             <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
                             <input type="text" name="username" id="username"
                                 value="{{ old('username', auth()->user()->username) }}"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                class="mt-1 p-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             @error('username', 'updateProfile')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -137,8 +137,18 @@
                             <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                             <input type="email" name="email" id="email"
                                 value="{{ old('email', auth()->user()->email) }}"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                class="mt-1 p-1 block w-full border-gray-300 rounded-md shadow-sm">
                             @error('email', 'updateProfile')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div class="mb-4">
+                            <label for="bio" class="block text-sm font-medium text-gray-700">Bio</label>
+                            <textarea name="bio" id="bio" rows="1"
+                                class="w-full border border-border text-foreground rounded-md p-1 text-sm  resize-none overflow-hidden"
+                                placeholder="Add a new bio..." oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px'">{{ old('bio', auth()->user()->bio) }}</textarea>
+
+                            @error('bio', 'updateProfile')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>

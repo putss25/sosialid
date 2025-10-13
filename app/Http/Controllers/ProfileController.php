@@ -15,11 +15,13 @@ class ProfileController extends Controller
     {
        $user->loadCount(['posts', 'followers', 'following']);
 
-    // ✅ Batasi posts yang di-load (ambil 30 terakhir saja)
-    $user->load(['posts' => function($query) {
-        $query->latest()->take(30);
-    }]);
+   // AMBIL POSTINGAN SECARA TERPISAH DENGAN PAGINASI
+    // Kita panggil method relasi posts() (dengan kurung) untuk mendapatkan query builder
+    $posts = $user->posts()
+                  ->latest()
+                  ->paginate(12);
 
+    $posts->LoadCount(['likes', 'comments']);
     // ✅ Cek following status tanpa load semua following
     $isFollowing = false;
     if (Auth::check()) {
@@ -31,6 +33,7 @@ class ProfileController extends Controller
 
     return view('users.profile', [
         'user' => $user,
+        'posts' => $posts,
         'isFollowing' => $isFollowing,
     ]);
     }
@@ -44,37 +47,43 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function update(UpdateProfileRequest $request)
-    {
+    // public function update(UpdateProfileRequest $request)
+    // {
 
-        $user = Auth::user();
-        $validatedData = $request->validated();
+    //     $user = Auth::user();
+    //     $validatedData = $request->validated();
 
-        if ($request->hasFile('avatar')) {
-            if ($user->avatar !== 'images/default-avatar.png') {
-                Storage::disk('public')->delete(str_replace('/storage/', '', $user->avatar));
-            }
+    //     if ($request->hasFile('avatar')) {
+    //         if ($user->avatar !== 'images/default-avatar.png') {
+    //             Storage::disk('public')->delete(str_replace('/storage/', '', $user->avatar));
+    //         }
 
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $validatedData['avatar'] = "/{$path}";
-        }
+    //         $path = $request->file('avatar')->store('avatars', 'public');
+    //         $validatedData['avatar'] = "/{$path}";
+    //     }
 
-        $user->update($validatedData);
+    //     $user->update($validatedData);
 
-        return redirect()->route('profile.edit')->with('status', 'profile update success');
-    }
+    //     return redirect()->route('profile.edit')->with('status', 'profile update success');
+    // }
 
     public function follow(User $User)
     {
 
         $user = Auth::user();
         $user->following()->attach($User);
-        return back()->with('status', 'You are now following bro' . $User->username);
+        return back()->with('notification', [
+            'type' => 'success',
+            'message' => 'You are folowing bro' . $User->username
+        ]);
     }
     public function unfollow(User $User)
     {
         $user = Auth::user();
         $user->following()->detach($User);
-        return back()->with('status', 'You are now unfollowing bro' . $User->username);
+        return back()->with('notification', [
+            'type' => 'success',
+            'message' => 'You are now unfollowing bro' . $User->username
+        ]);
     }
 }
