@@ -131,7 +131,7 @@
                         <path d="M6.376 18.91a6 6 0 0 1 11.249.003" />
                         <circle cx="12" cy="11" r="4" />
                     </svg>
-                    <span>Administator</span>
+                    <span>Dashboard</span>
                 </a>
                 <a href="{{ route('admin.users.index') }}"
                     class="flex items-center gap-3 px-4 py-3 hover:text-foreground font-semibold transition-all duration-200 {{ request()->routeIs('admin.users.index') ? 'bg-muted-background text-foreground' : '' }}">
@@ -144,7 +144,7 @@
                     <span>Users</span>
                 </a>
                 <a href="{{ route('admin.posts.index') }}"
-                    class="flex items-center px-4 py-3 hover:text-foreground font-semibold transition-all duration-200 {{ request()->routeIs('search.index') ? 'bg-muted-background text-foreground' : '' }}">
+                    class="flex items-center px-4 py-3 hover:text-foreground font-semibold transition-all duration-200 {{ request()->routeIs('admin.posts.index') ? 'bg-muted-background text-foreground' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" class="lucide lucide-panel-top-icon lucide-panel-top mr-3">
@@ -158,7 +158,8 @@
                     class="flex text-accent items-center px-4 py-3  font-semibold transition-all duration-200 {{ request()->routeIs('home') ? 'bg-muted-background text-foreground' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" class="lucide lucide-house-icon lucide-house text-foreground mr-3 stroke-accent">
+                        stroke-linejoin="round"
+                        class="lucide lucide-house-icon lucide-house text-foreground mr-3 stroke-accent">
                         <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
                         <path
                             d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -209,7 +210,7 @@
         </aside>
 
         <div class="flex-1 flex flex-col overflow-hidden">
-            <header class="lg:hidden flex justify-between items-center p-4 bg-background border-b">
+            <header class="lg:hidden flex justify-between items-center p-4  bg-background border-b">
                 <img src="/images/snapi.svg" class="w-[15%] max-w-[100px]" alt="">
             </header>
 
@@ -220,43 +221,52 @@
 
         <nav
             class="lg:hidden fixed bottom-0 left-0 w-full bg-background border-t flex justify-around items-center z-20">
-            <a href="{{ route('home') }}"
-                class="flex flex-col items-center justify-center text-center p-3 text-sm font-semibold {{ request()->routeIs('home') ? 'text-primary' : 'text-foreground' }}">
+            <a href="{{ route('admin.dashboard') }}"
+                class="flex flex-col flex-1 gap-1 items-center justify-center text-center p-3 text-sm font-semibold {{ request()->routeIs('admin.dashboard') ? 'text-primary' : 'text-foreground' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" class="lucide lucide-house-icon lucide-house text-foreground mb-1">
+                    stroke-linejoin="round" class="lucide lucide-shield-user-icon lucide-shield-user ">
+                    <path
+                        d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+                    <path d="M6.376 18.91a6 6 0 0 1 11.249.003" />
+                    <circle cx="12" cy="11" r="4" />
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ route('admin.users.index') }}"
+                class="flex flex-col flex-1 gap-1 items-center justify-center text-center p-3 text-sm font-semibold {{ request()->routeIs('admin.users.index') ? 'text-primary' : 'text-foreground' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" class="lucide lucide-user-icon lucide-user">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                <span>Users</span>
+            </a>
+            <a href="{{ route('admin.posts.index') }}"
+                class="flex flex-col flex-1 gap-1 items-center justify-center text-center p-3 text-sm font-semibold {{ request()->routeIs('admin.posts.index') ? 'text-primary' : 'text-foreground' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" class="lucide lucide-panel-top-icon lucide-panel-top">
+                    <rect width="18" height="18" x="3" y="3" rx="2" />
+                    <path d="M3 9h18" />
+                </svg>
+                <span>Post</span>
+            </a>
+            <a href="{{ route('home') }}"
+                class="flex flex-col flex-1 text-accent items-center px-4 py-3  font-semibold transition-all duration-200 {{ request()->routeIs('home') ? 'bg-muted-background text-foreground' : '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-house-icon lucide-house text-foreground  stroke-accent">
                     <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
                     <path
                         d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                 </svg>
                 <span>Home</span>
             </a>
-            <a href="{{ route('search.index') }}"
-                class="flex flex-col items-center justify-center text-center p-3 text-sm font-semibold {{ request()->routeIs('search.index') ? 'text-primary' : 'text-foreground' }}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" class="lucide lucide-search-icon lucide-search text-foreground mb-1">
-                    <path d="m21 21-4.34-4.34" />
-                    <circle cx="11" cy="11" r="8" />
-                </svg>
-                <span>Search</span>
-            </a>
-            <button @click="createModalOpen = true"
-                class="flex flex-col items-center justify-center text-center p-3 text-sm font-semibold text-foreground">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus text-foreground mb-1">
-                    <path d="M5 12h14" />
-                    <path d="M12 5v14" />
-                </svg>
-                <span>Create</span>
-            </button>
-            <a href="{{ route('profile.show', auth()->user()) }}" {{-- class="flex items-center px-4 py-3 hover:text-foreground font-semibold transition-all duration-200 {{ request()->routeIs('home') ? 'bg-muted-background text-foreground' : '' }}" --}}
-                class="flex flex-col items-center justify-center text-center p-3 text-sm font-semibold {{ request()->routeIs('profile.show', auth()->user()) ? 'text-primbg-primary' : 'text-gray-600' }}">
-                <img class="w-6 h-6 mb-1 object-cover rounded-full" src="{{ Auth::user()->avatar }}"
-                    alt="Your avatar">
-                <span>Profile</span>
-            </a>
+
+
         </nav>
 
         {{-- Modal untuk Create Post (Tidak ada perubahan di sini) --}}

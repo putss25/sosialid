@@ -120,21 +120,8 @@
             <div class="py-8 flex items-center  flex-shrink-0 px-4">
                 <img src="/images/snapi.svg" class="w-[40%]" alt="">
             </div>
+
             <nav class="flex-grow flex flex-col text-muted-foreground text-xl gap-2">
-                @if ( auth()->user()->is_admin)
-                    <a href="{{ route('admin.dashboard') }}"
-                        class="flex items-center px-4 py-3 hover:text-foreground font-semibold transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-muted-background text-foreground' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="lucide lucide-shield-user-icon lucide-shield-user mr-3">
-                            <path
-                                d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
-                            <path d="M6.376 18.91a6 6 0 0 1 11.249.003" />
-                            <circle cx="12" cy="11" r="4" />
-                        </svg>
-                        <span>Administator</span>
-                    </a>
-                @endif
 
 
                 <a href="{{ route('home') }}"
@@ -210,10 +197,15 @@
                                 class=" block px-4 py-2 text-muted-foreground hover:bg-primary hover:text-white ">
                                 Settings
                             </a>
-                            <a href="{{ route('home') }}"
-                                class="block px-4 py-2 text-muted-foreground hover:bg-primary hover:text-white">Go
-                                to
-                                Site</a>
+
+                            @if (auth()->user()->is_admin)
+                                <a href="{{ route('admin.dashboard') }}"
+                                    class="block px-4 py-2 text-muted-foreground hover:bg-primary hover:text-white">
+
+                                    Dashboard
+                                </a>
+                            @endif
+
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit"
@@ -230,8 +222,47 @@
         </aside>
 
         <div class="flex-1 flex flex-col overflow-hidden">
-            <header class="lg:hidden flex justify-between items-center p-4 bg-background border-b">
+            <header class="lg:hidden flex justify-between items-center p-3 px-5 bg-background border-b">
                 <img src="/images/snapi.svg" class="w-[15%] max-w-[100px]" alt="">
+                <div x-data="{ dropdownOpen: false }" class="relative">
+                    <button @click="dropdownOpen = !dropdownOpen"
+                        class="relative block h-5 w-5  overflow-hidden focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="lucide lucide-menu-icon lucide-menu text-foreground">
+                            <path d="M4 5h16" />
+                            <path d="M4 12h16" />
+                            <path d="M4 19h16" />
+                        </svg>
+                    </button>
+
+                    <div x-show="dropdownOpen" @click.away="dropdownOpen = false"
+                        class="absolute top-full  translate-y-0 right-0 mt-2 w-48 bg-muted-background rounded-md shadow-xl z-10 text-base"
+                        x-cloak>
+                        {{-- <div class="px-4 py-3 text-foreground border-b border-border">
+                                {{ Auth::user()->username }}</div> --}}
+                        <a href="{{ route('settings.index') }}"
+                            class=" block px-4 py-2 text-muted-foreground hover:bg-primary hover:text-white ">
+                            Settings
+                        </a>
+
+                        @if (auth()->user()->is_admin)
+                            <a href="{{ route('admin.dashboard') }}"
+                                class="block px-4 py-2 text-muted-foreground hover:bg-primary hover:text-white">
+
+                                Dashboard
+                            </a>
+                        @endif
+
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="w-full text-left block px-4 py-2 text-muted-foreground hover:bg-primary hover:text-white">
+                                Log Out
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </header>
 
             <main class="flex-1 overflow-x-hidden overflow-y-auto  pb-24 lg:pb-0">
@@ -241,8 +272,9 @@
 
         <nav
             class="lg:hidden fixed bottom-0 left-0 w-full bg-background border-t flex justify-around items-center z-20">
+
             <a href="{{ route('home') }}"
-                class="flex flex-col items-center justify-center text-center p-3 text-sm font-semibold {{ request()->routeIs('home') ? 'text-primary' : 'text-foreground' }}">
+                class="flex flex-col flex-1 items-center justify-center text-center p-3 text-sm font-semibold {{ request()->routeIs('home') ? 'text-primary' : 'text-foreground' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" class="lucide lucide-house-icon lucide-house text-foreground mb-1">
@@ -253,7 +285,7 @@
                 <span>Home</span>
             </a>
             <a href="{{ route('search.index') }}"
-                class="flex flex-col items-center justify-center text-center p-3 text-sm font-semibold {{ request()->routeIs('search.index') ? 'text-primary' : 'text-foreground' }}">
+                class="flex flex-col flex-1 items-center justify-center text-center p-3 text-sm font-semibold {{ request()->routeIs('search.index') ? 'text-primary' : 'text-foreground' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" class="lucide lucide-search-icon lucide-search text-foreground mb-1">
@@ -263,7 +295,7 @@
                 <span>Search</span>
             </a>
             <button @click="createModalOpen = true"
-                class="flex flex-col items-center justify-center text-center p-3 text-sm font-semibold text-foreground">
+                class="flex flex-col flex-1 items-center justify-center text-center p-3 text-sm font-semibold text-foreground">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus text-foreground mb-1">
@@ -272,8 +304,19 @@
                 </svg>
                 <span>Create</span>
             </button>
+            <a href="{{ route('explore.posts') }}"
+                class="flex flex-1 flex-col items-center px-4 py-3 hover:text-foreground font-semibold transition-all duration-200 {{ request()->routeIs('explore.posts') ? 'bg-muted-background text-foreground' : '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" class="lucide lucide-compass-icon lucide-compass text-foreground ">
+                    <path
+                        d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" />
+                    <circle cx="12" cy="12" r="10" />
+                </svg>
+                <span>Explore</span>
+            </a>
             <a href="{{ route('profile.show', auth()->user()) }}"
-                class="flex flex-col items-center justify-center text-center p-3 text-sm font-semibold {{ request()->routeIs('profile.show', auth()->user()) ? 'text-primbg-primary' : 'text-gray-600' }}">
+                class="flex flex-col flex-1 items-center justify-center text-center p-3 text-sm font-semibold {{ request()->routeIs('profile.show', auth()->user()) ? 'text-primbg-primary' : 'text-gray-600' }}">
                 <img class="w-6 h-6 mb-1 object-cover rounded-full" src="{{ Auth::user()->avatar }}"
                     alt="Your avatar">
                 <span>Profile</span>

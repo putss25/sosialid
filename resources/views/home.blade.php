@@ -7,7 +7,7 @@
                 {{-- CARD --}}
                 <div class="bg-background rounded-lg space-y-4 py-4 mb-8">
                     {{-- Header Post --}}
-                    <div class="flex items-center ">
+                    <div class="flex items-center px-3 lg:px-0">
                         <a href="{{ route('profile.show', $post->user) }}">
                             <img src="{{ $post->user->avatar }}" alt="{{ $post->user->username }}'s avatar"
                                 class="w-10 h-10 rounded-full object-cover">
@@ -30,7 +30,7 @@
                         </a>
                     </div>
 
-                    <div class="mt-4">
+                    <div class="mt-4 px-3 lg:px-0">
                         <div class="flex items-center space-x-3">
                             @auth
                                 @if (auth()->user()->likes->contains($post))

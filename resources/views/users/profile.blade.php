@@ -56,15 +56,15 @@
                 <div class="mt-4 flex space-x-6 sm:space-x-8 text-sm">
                     <div>
                         <span class="font-bold">{{ $user->posts_count }}</span>
-                        <span class="text-gray-500 dark:text-[--color-text-tertiary]">posts</span>
+                        <span class="text-gray-500 ">posts</span>
                     </div>
                     <div>
                         <span class="font-bold">{{ $user->followers_count }}</span>
-                        <span class="text-gray-500 dark:text-[--color-text-tertiary]">followers</span>
+                        <span class="text-gray-500 ">followers</span>
                     </div>
                     <div>
                         <span class="font-bold">{{ $user->following_count }}</span>
-                        <span class="text-gray-500 dark:text-[--color-text-tertiary]">following</span>
+                        <span class="text-gray-500 ">following</span>
                     </div>
                 </div>
                 <div class="mt-4">

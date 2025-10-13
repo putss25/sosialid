@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto py-10 px-4 lg:px-8">
         <h1 class="text-2xl font-semibold mb-6">User Management</h1>
 
         {{-- FORM PENCARIAN BARU --}}
@@ -10,14 +10,19 @@
                 <input type="text" name="q" placeholder="Search by name, username, or email..."
                     value="{{ request('q') }}" class="w-full pl-10 pr-4 py-2 border rounded-lg">
                 <div class="absolute top-0 left-0 inline-flex items-center p-2">
-                    <svg class="w-6 h-6 text-gray-400" ...></svg> {{-- ikon search --}}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-search-icon lucide-search">
+                        <path d="m21 21-4.34-4.34" />
+                        <circle cx="11" cy="11" r="8" />
+                    </svg>
                 </div>
             </div>
         </form>
 
-        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+        <div class="bg-netr overflow-hidden  overflow-x-auto shadow-xl sm:rounded-lg">
+            <table class="min-w-full divide-y divide-border">
+                <thead class="bg-muted-background">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email
@@ -28,7 +33,7 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="bg-netr divide-y divide-border">
                     @foreach ($users as $user)
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $user->username }}</td>
@@ -53,6 +58,10 @@
                                 @endif
 
                                 {{-- Tombol Delete (tetap sama) --}}
+
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                {{-- Kolom Aksi akan kita isi di bawah --}}
                                 @if (!$user->is_admin && $user->id !== auth()->id())
                                     <form action="{{ route('admin.users.destroy', $user) }}" method="POST">
                                         @csrf
@@ -61,9 +70,6 @@
                                             onclick="return confirm('Are you sure?')">Delete</button>
                                     </form>
                                 @endif
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                {{-- Kolom Aksi akan kita isi di bawah --}}
                             </td>
                         </tr>
                     @endforeach
