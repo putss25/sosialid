@@ -13,11 +13,11 @@ class UsersController extends Controller
     {
         $query = User::query();
 
-        if($request->has('q')){
+        if ($request->has('q')) {
             $search = $request->input('q');
-            $query->where(function($q) use ($search){
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%${search}%")
-                ->orWhere('username', 'like', "%${search}%");
+                    ->orWhere('username', 'like', "%${search}%");
             });
         }
 
@@ -49,15 +49,15 @@ class UsersController extends Controller
     }
     public function deleteUser(User $user)
     {
-        if ($user->id === Auth::user()->id()) {
+        if ($user->id === Auth::id()) {
             return back()->with('error', 'You cannot delete your own account from the admin panel');
         }
-          $user->delete();
+        $user->delete();
 
         return back()->with('notification', [
             'type' => 'error',
-            'message' => 'status', 'User "' . $user->username . '" has been deleted!'
+            'message' =>
+            'User "' . $user->username . '" has been deleted!'
         ]);
     }
-
 }

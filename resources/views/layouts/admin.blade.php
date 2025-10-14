@@ -116,13 +116,13 @@
     }" class="flex h-screen bg-background">
         <x-notification />
 
-        <aside class="hidden lg:flex flex-shrink-0  w-52 flex-col border-r border-border z-10">
+        <aside class="hidden bg-primary text-white lg:flex flex-shrink-0  w-52 flex-col border-r border-border z-10">
             <div class="py-8 flex items-center  flex-shrink-0 px-4">
                 <h1 class="text-md font-serif">ADMINISTRATOR</h1>
             </div>
-            <nav class="flex-grow flex flex-col text-muted-foreground text-xl gap-2">
+            <nav class="flex-grow flex flex-col  text-xl gap-2">
                 <a href="{{ route('admin.dashboard') }}"
-                    class="flex items-center px-4 py-3 hover:text-foreground font-semibold transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-muted-background text-foreground' : '' }}">
+                    class="flex items-center px-4 py-3 hover:text-white-hover font-semibold transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-muted-background text-white-hover' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" class="lucide lucide-shield-user-icon lucide-shield-user mr-3">
@@ -134,7 +134,7 @@
                     <span>Dashboard</span>
                 </a>
                 <a href="{{ route('admin.users.index') }}"
-                    class="flex items-center gap-3 px-4 py-3 hover:text-foreground font-semibold transition-all duration-200 {{ request()->routeIs('admin.users.index') ? 'bg-muted-background text-foreground' : '' }}">
+                    class="flex items-center gap-3 px-4 py-3 hover:text-white-hover font-semibold transition-all duration-200 {{ request()->routeIs('admin.users.index') ? 'bg-muted-background text-black' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" class="lucide lucide-user-icon lucide-user">
@@ -144,7 +144,7 @@
                     <span>Users</span>
                 </a>
                 <a href="{{ route('admin.posts.index') }}"
-                    class="flex items-center px-4 py-3 hover:text-foreground font-semibold transition-all duration-200 {{ request()->routeIs('admin.posts.index') ? 'bg-muted-background text-foreground' : '' }}">
+                    class="flex items-center px-4 py-3 hover:text-white-hover font-semibold transition-all duration-200 {{ request()->routeIs('admin.posts.index') ? 'bg-muted-background text-blackr' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" class="lucide lucide-panel-top-icon lucide-panel-top mr-3">
@@ -155,7 +155,7 @@
                 </a>
 
                 <a href="{{ route('home') }}"
-                    class="flex text-accent items-center px-4 py-3  font-semibold transition-all duration-200 {{ request()->routeIs('home') ? 'bg-muted-background text-foreground' : '' }}">
+                    class="flex text-accent items-center px-4 py-3  font-semibold transition-all duration-200 {{ request()->routeIs('home') ? 'bg-muted-background text-black' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round"

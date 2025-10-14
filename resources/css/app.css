@@ -35,6 +35,8 @@
 
     --color-destructive: var(--destructive);
     --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-white-hover: #e0e0e3
 }
 /* PASTIKAN html apply background & color dari CSS variables */
 html {
@@ -102,24 +104,3 @@ html.dark {
     --destructive-foreground: oklch(0.577 0.245 27.325);
 }
 
-@layer base {
-    * {
-        @apply border-border;
-    }
-
-    body {
-        @apply bg-background text-foreground;
-    }
-}
-
-.container {
-    @apply mx-4 sm:mx-6 md:mx-8 lg:mx-12 xl:mx-16 2xl:mx-auto 2xl:max-w-6xl;
-}
-
-.conp {
-    @apply px-[5vw] sm:px-[6vw] md:px-0;
-}
-
-.guede {
-    @apply text-4xl lg:text-5xl xl:text-6xl;
-}
