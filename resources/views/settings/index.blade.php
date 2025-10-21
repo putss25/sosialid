@@ -6,6 +6,7 @@
         avatarModalOpen: false,
         avatarImageUrl: null,
         cropperInstance: null,
+        isSubmitting: false,
 
         handleAvatarFileSelect(event) {
             const file = event.target.files[0];
@@ -89,7 +90,8 @@
 
                     {{-- Form untuk update nama & email --}}
 
-                    <form action="{{ route('settings.profile.update') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('settings.profile.update') }}" method="POST" enctype="multipart/form-data"
+                        @submit="isSubmitting = true">
                         @csrf
                         @method('PATCH')
                         {{-- BAGIAN BARU UNTUK FOTO PROFIL --}}
@@ -100,7 +102,7 @@
                                 <img id="avatar-preview" src="{{ auth()->user()->avatar }}" alt="Current avatar"
                                     class="w-16 h-16 rounded-full object-cover">
                                 <label for="avatar-upload"
-                                    class="px-4 py-2 border border-[--color-border] rounded-md text-sm font-medium text-[--color-text] hover:bg-[--color-surface-hover] cursor-pointer">
+                                    class="px-4 py-2 border rounded-md text-sm font-medium  cursor-pointer">
                                     Change
                                 </label>
                                 <input id="avatar-upload" name="avatar" type="file" class="hidden"
@@ -245,8 +247,57 @@
                 <div class="px-4 py-3 border-t flex justify-end">
                     <button type="button" @click="closeAvatarModal()"
                         class="px-4 py-2 border rounded-md mr-2">Cancel</button>
-                    <button type="button" @click="cropAvatar()" class="px-4 py-2 bg-primary text-white rounded-md">Crop
-                        & Save</button>
+                    <button type="button" :disabled="isSubmitting" @click="cropAvatar()"
+                        class="px-4 py-2 bg-primary text-white rounded-md disabled:cursor-not-allowed flex items-center justify-center w-24"><span
+                            x-show="!isSubmitting">Share</span>
+
+                        {{-- Teks/Spinner saat sedang submitting --}}
+                        <span x-show="isSubmitting">
+                            <svg width="24" height="24" stroke="#fff" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <style>
+     \                               .spinner_V8m1 {
+                                        transform-origin: center;
+                                        animation: spinner_zKoa 2s linear infinite
+                                    }
+
+                                    .spinner_V8m1 circle {
+                                        stroke-linecap: round;
+                                        animation: spinner_YpZS 1.5s ease-in-out infinite
+                                    }
+
+                                    @keyframes spinner_zKoa {
+                                        100% {
+                                            transform: rotate(360deg)
+                                        }
+                                    }
+
+                                    @keyframes spinner_YpZS {
+                                        0% {
+                                            stroke-dasharray: 0 150;
+                                            stroke-dashoffset: 0
+                                        }
+
+                                        47.5% {
+                                            stroke-dasharray: 42 150;
+                                            stroke-dashoffset: -16
+                                        }
+
+                                        95%,
+                                        100% {
+                                            stroke-dasharray: 42 150;
+                                            stroke-dashoffset: -59
+                                        }
+                                    }
+                                </style>
+                                <g class="spinner_V8m1">
+                                    <circle cx="12" cy="12" r="9.5" fill="none" stroke-width="3">
+                                    </circle>
+                                </g>
+                            </svg>
+                        </span></button>
+
+
                 </div>
             </div>
         </div>

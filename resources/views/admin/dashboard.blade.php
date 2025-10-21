@@ -32,11 +32,12 @@
         {{-- Grid untuk Laporan Analitik BARU --}}
         <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            <div class="bg-netr dark:bg-[--color-surface] p-6 rounded-lg shadow-lg">
+            <div class="bg-netr   p-6 rounded-lg shadow-lg">
                 <h3 class="text-lg font-semibold ">Most Popular Posts</h3>
                 <div class="mt-4 space-y-4">
                     @forelse($popularPosts as $post)
-                        <a href="{{ route('post.show', $post) }}" target="_blank" class="flex rounded-md items-center space-x-4 hover:bg-accent p-3 hover:text-netbg-netr group">
+                        <a href="{{ route('post.show', $post) }}" target="_blank"
+                            class="flex rounded-md items-center space-x-4 hover:bg-accent p-3 hover:text-netbg-netr group">
                             <img src="{{ $post->image }}" class="w-12 ratio-4x3  object-cover">
                             <div class="flex-grow">
                                 <p class="text-md font-semibold">by {{ $post->user->username }}</p>
@@ -53,12 +54,13 @@
                 </div>
             </div>
 
-            <div class="bg-netr dark:bg-[--color-surface] p-6 rounded-lg shadow-lg">
+            <div class="bg-netr   p-6 rounded-lg shadow-lg">
                 <h3 class="text-lg font-semibold ">Most Active Users</h3>
                 <div class="mt-4 space-y-4">
                     @forelse($activeUsers as $user)
-                        <a href="{{ route('profile.show', $user) }}" target="_blank" class="flex items-center space-x-4 hover:bg-primary p-3 rounded-md hover:text-netbg-netr">
-                                <img src="{{ $user->avatar }}" class="w-12 h-12 rounded-full object-cover">
+                        <a href="{{ route('profile.show', $user) }}" target="_blank"
+                            class="flex items-center space-x-4 hover:bg-primary p-3 rounded-md hover:text-netbg-netr">
+                            <img src="{{ $user->avatar }}" class="w-12 h-12 rounded-full object-cover">
                             <div class="flex-grow">
                                 <p class="font-semibold text-sm ">{{ $user->username }}</p>
                                 <p class="text-xs text-secondary">{{ $user->email }}</p>

@@ -72,6 +72,7 @@
         step: 1,
         imageUrl: null,
         cropperInstance: null,
+        isSubmitting: false,
 
         handleFileSelect(event) {
             const file = event.target.files[0];
@@ -345,7 +346,8 @@
                     <button @click="closeModal()" class="text-gray-500 hover:text-gray-800 text-2xl leading-none"
                         x-show="step !== 2">&times;</button>
                 </div>
-                <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data"
+                    @submit="isSubmitting = true">
                     @csrf
                     <input type="hidden" name="cropped_image" id="cropped-image-data">
                     <div class="p-6">
@@ -384,14 +386,63 @@
                             </div>
                         </div>
                     </div>
-                    <div x-show="step === 3" class="px-4 py-3 border-t text-right">
+                    <div x-show="step === 3" class="px-4 py-3 border-t text-right flex justify-end">
                         <button type="button" @click="closeModal()"
                             class="px-6 py-2 bg-gray-200 text-muted-foreground rounded-lg hover:bg-gray-300 mr-2">
                             Cancel
                         </button>
-                        <button type="submit"
-                            class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-                            Share
+                        <button type="submit" :disabled="isSubmitting"
+                            class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition disabled:cursor-not-allowed flex flex-row items-center justify-center ">
+
+                            {{-- Teks saat tidak submitting --}}
+                            <span x-show="!isSubmitting">Share</span>
+
+                            {{-- Teks/Spinner saat sedang submitting --}}
+                            <span x-show="isSubmitting">
+                                <svg width="24" height="24" class="stroke-white" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <style>
+                                        .spinner_V8m1 {
+                                            transform-origin: center;
+                                            animation: spinner_zKoa 2s linear infinite
+                                        }
+
+                                        .spinner_V8m1 circle {
+                                            stroke-linecap: round;
+                                            animation: spinner_YpZS 1.5s ease-in-out infinite
+                                        }
+
+                                        @keyframes spinner_zKoa {
+                                            100% {
+                                                transform: rotate(360deg)
+                                            }
+                                        }
+
+                                        @keyframes spinner_YpZS {
+                                            0% {
+                                                stroke-dasharray: 0 150;
+                                                stroke-dashoffset: 0
+                                            }
+
+                                            47.5% {
+                                                stroke-dasharray: 42 150;
+                                                stroke-dashoffset: -16
+                                            }
+
+                                            95%,
+                                            100% {
+                                                stroke-dasharray: 42 150;
+                                                stroke-dashoffset: -59
+                                            }
+                                        }
+                                    </style>
+                                    <g class="spinner_V8m1">
+                                        <circle cx="12" cy="12" r="9.5" fill="none"
+                                            stroke-width="3"></circle>
+                                    </g>
+                                </svg>
+                                {{-- Sharing... --}}
+                            </span>
                         </button>
                     </div>
                 </form>

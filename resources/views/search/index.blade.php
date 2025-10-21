@@ -30,18 +30,18 @@
                                 <img src="{{ $user->avatar }}" alt="{{ $user->username }}"
                                     class="w-12 h-12 rounded-full object-cover">
                                 <div>
-                                    <p class="font-bold text-[--color-text]">{{ $user->username }}</p>
-                                    <p class="text-sm text-[--color-text-secondary]">{{ $user->name }}</p>
+                                    <p class="font-bold ]">{{ $user->username }}</p>
+                                    <p class="text-sm  text-secondary]">{{ $user->name }}</p>
                                 </div>
                             </a>
                             {{-- Tombol Follow/Unfollow bisa ditambahkan di sini jika mau --}}
                         </div>
                     @empty
-                        <p class="text-[--color-text-secondary]">No users found.</p>
+                        <p class=" text-secondary]">No users found.</p>
                     @endforelse
                 </div>
             @else
-                <p class="text-[--color-text-secondary]">Enter a name or username to search for users.</p>
+                <p class=" text-secondary]">Enter a name or username to search for users.</p>
             @endif
         </div>
 

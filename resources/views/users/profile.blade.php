@@ -122,8 +122,8 @@
                 </div>
             @else
                 <div class="text-center py-10">
-                    <h2 class="text-2xl font-bold text-gray-800">No Posts Yet</h2>
-                    <p class="text-gray-500 mt-2">This user hasn't shared any photos.</p>
+                    <h2 class="text-2xl font-bold text-foreground">No Posts Yet</h2>
+                    <p class="text-muted-foreground mt-2">This user hasn't shared any photos.</p>
                 </div>
             @endif
         </div>

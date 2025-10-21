@@ -19,15 +19,14 @@
                 </div>
 
                 <!-- Register Form -->
-                <form method="POST" action="/register" class="space-y-5">
+                <form method="POST" action="/register" class="space-y-5" >
                     @csrf
 
                     <!-- Name Input -->
                     <div>
                         <label for="name" class="block text-sm font-medium mb-2">Full Name</label>
                         <div class="relative">
-                            <input id="name" name="name" type="text" required
-                                placeholder="John Doe"
+                            <input id="name" name="name" type="text" required placeholder="John Doe"
                                 class="w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                             <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -46,7 +45,7 @@
                     <div>
                         <label for="username" class="block text-sm font-medium mb-2">Username</label>
                         <div class="relative">
-                            <input id="username" name="username" type="text" required
+                            <input id="username" name="username" type="text" required autocomplete="off" aria-autocomplete="off"
                                 placeholder="johndoe"
                                 class="w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                             <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -86,8 +85,7 @@
                     <div>
                         <label for="password" class="block text-sm font-medium mb-2">Password</label>
                         <div class="relative">
-                            <input id="password" name="password" type="password" required
-                                placeholder="8+ strong character"
+                            <input id="password" name="password" type="password" required placeholder="8+ strong character" autocomplete="new-password"
                                 class="w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                             <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,9 +145,15 @@
 
                 <div class="flex items-center space-x-4">
                     <div class="flex -space-x-2">
-                        <div class="w-10 h-10 rounded-full border-2 border-white bg-gradient-to-br from-pink-400 to-purple-500"></div>
-                        <div class="w-10 h-10 rounded-full border-2 border-white bg-gradient-to-br from-blue-400 to-cyan-500"></div>
-                        <div class="w-10 h-10 rounded-full border-2 border-white bg-gradient-to-br from-orange-400 to-red-500"></div>
+                        <div
+                            class="w-10 h-10 rounded-full border-2 border-white bg-gradient-to-br from-pink-400 to-purple-500">
+                        </div>
+                        <div
+                            class="w-10 h-10 rounded-full border-2 border-white bg-gradient-to-br from-blue-400 to-cyan-500">
+                        </div>
+                        <div
+                            class="w-10 h-10 rounded-full border-2 border-white bg-gradient-to-br from-orange-400 to-red-500">
+                        </div>
                     </div>
                     <div>
                         <p class="font-semibold text-white">10,000+ Users</p>

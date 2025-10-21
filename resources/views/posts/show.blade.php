@@ -62,13 +62,12 @@
                         setTimeout(() => copied = false, 2000);
                         open = false;
                         "
-                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-[--color-text-secondary] hover:bg-gray-100 dark:hover:bg-[--color-surface-hover]">
+                                        class="w-full text-left block px-4 py-2 text-sm text-foreground   ">
                                         <span x-show="!copied">Copy Link</span>
-                                        <span x-show="copied" class="text-green-500 font-semibold">Copied!</span>
                                     </button>
 
                                     <a href="{{ route('posts.edit', $post) }}"
-                                        class="block px-4 py-2 text-sm text-gray-700 dark:text-[--color-text-secondary] hover:bg-gray-100 dark:hover:bg-[--color-surface-hover]"
+                                        class="block px-4 py-2 text-sm text-foreground dark: text-secondary] "
                                         role="menuitem">
                                         Edit
                                     </a>
@@ -77,7 +76,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                            class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-[--color-surface-hover]"
+                                            class="w-full text-left block px-4 py-2 text-sm text-destructive "
                                             onclick="return confirm('Are you sure you want to delete this post?')">
                                             Delete
                                         </button>
@@ -134,7 +133,7 @@
                                 x-transition:leave="transition ease-in duration-75"
                                 x-transition:leave-start="transform opacity-100 scale-100"
                                 x-transition:leave-end="transform opacity-0 scale-95"
-                                class="absolute right-0 mt-2 w-48 bg-muted-background rounded-md shadow-xl z-20 origin-top-right  shadow-md focus:outline-none"
+                                class="absolute right-0 mt-2 w-48 bg-muted-background rounded-md shadow-xl z-20 origin-top-right  focus:outline-none"
                                 x-cloak>
                                 <div class="py-1" role="menu" aria-orientation="vertical">
                                     <button
@@ -144,13 +143,13 @@
                         setTimeout(() => copied = false, 2000);
                         open = false;
                         "
-                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-[--color-text-secondary] hover:bg-gray-100 dark:hover:bg-[--color-surface-hover]">
+                                        class="w-full text-left block px-4 py-2 text-sm text-foreground ">
                                         <span x-show="!copied">Copy Link</span>
                                         <span x-show="copied" class="text-green-500 font-semibold">Copied!</span>
                                     </button>
 
                                     <a href="{{ route('posts.edit', $post) }}"
-                                        class="block px-4 py-2 text-sm text-gray-700 dark:text-[--color-text-secondary] hover:bg-gray-100 dark:hover:bg-[--color-surface-hover]"
+                                        class="block px-4 py-2 text-sm text-foreground "
                                         role="menuitem">
                                         Edit
                                     </a>
@@ -159,7 +158,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                            class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-[--color-surface-hover]"
+                                            class="w-full text-left block px-4 py-2 text-sm text-destructive "
                                             onclick="return confirm('Are you sure you want to delete this post?')">
                                             Delete
                                         </button>
