@@ -24,18 +24,7 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/login', [LoginController::class, 'store']);
 
 });
-
-// Rute khusus untuk memicu notifikasi
-Route::post('/trigger-notification', function (Request $request) {
-    // Ambil tipe dan pesan dari request, berikan nilai default jika tidak ada
-    $type = $request->input('type', 'info');
-    $message = $request->input('message', 'This is a test notification.');
-
-    return back()->with('notification', [
-        'type' => $type,
-        'message' => $message,
-    ]);
-})->name('notification.trigger');
+    
 
 Route::get('/verify-otp', [VerificationController::class, 'show'])->name('otp.show');
 Route::post('/verify-otp', [VerificationController::class, 'verify'])->name('otp.verify');

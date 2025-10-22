@@ -82,7 +82,7 @@ class SettingsController extends Controller
     {
      $validated = $request->validateWithBag('updatePassword', [
         'current_password' => ['required', 'current_password'],
-        'new_password' => ['required', Password::min(8)->mixedCase(), 'confirmed']
+        'new_password' => ['required', Password::min(8), 'confirmed']
      ]);
 
      $request->user()->update([

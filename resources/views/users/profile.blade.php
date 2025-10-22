@@ -31,26 +31,28 @@
                     </div>
 
                     @auth
-                        {{-- ✅ SESUDAH (CEPAT) --}}
-                        @if ($isFollowing)
-                            {{-- Unfollow button --}}
-                            <form action="{{ route('profile.unfollow', $user) }}" method="POST">
-                                @csrf
-                                <button type="submit"
-                                    class="bg-gray-200 text-gray-800 font-semibold py-1 px-3 rounded-md text-sm">
-                                    Unfollow
-                                </button>
-                            </form>
-                        @else
-                            {{-- Follow button --}}
-                            <form action="{{ route('profile.follow', $user) }}" method="POST">
-                                @csrf
-                                <button type="submit"
-                                    class="bg-primary text-white font-semibold py-1 px-3 rounded-md text-sm hover:bg-primary-hover">
-                                    Follow
-                                </button>
-                            </form>
+                      @if (Auth::user()->id !== $user->id)
+                            @if ($isFollowing)
+                                {{-- Unfollow button --}}
+                                <form action="{{ route('profile.unfollow', $user) }}" method="POST">
+                                    @csrf
+                                    <button type="submit"
+                                        class="bg-gray-200 text-gray-800 font-semibold py-1 px-3 rounded-md text-sm">
+                                        Unfollow
+                                    </button>
+                                </form>
+                            @else
+                                {{-- Follow button --}}
+                                <form action="{{ route('profile.follow', $user) }}" method="POST">
+                                    @csrf
+                                    <button type="submit"
+                                        class="bg-primary text-white font-semibold py-1 px-3 rounded-md text-sm hover:bg-primary-hover">
+                                        Follow
+                                    </button>
+                                </form>
+                            @endif
                         @endif
+
                     @endauth
                 </div>
                 <div class="mt-4 flex space-x-6 sm:space-x-8 text-sm">

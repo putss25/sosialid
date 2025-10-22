@@ -22,7 +22,7 @@ class RegisterController extends Controller
         // 1. Validasi input awal
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:32'],
-            'username' => ['required', 'string', 'max:16', 'unique:users'],
+            'username' => ['required', 'string', 'max:16', 'unique:users', 'alpha_dash'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
         ]);

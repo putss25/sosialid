@@ -74,7 +74,7 @@
         cropperInstance: null,
         isSubmitting: false,
 
-        handleFileSelect(event) {
+       handleFileSelect(event) {
             const file = event.target.files[0];
             if (file) {
                 this.imageUrl = URL.createObjectURL(file);
@@ -87,7 +87,7 @@
                     });
                 });
             }
-        },
+        }, 
 
         cropAndProceed() {
             if (this.cropperInstance) {
@@ -388,7 +388,7 @@
                     </div>
                     <div x-show="step === 3" class="px-4 py-3 border-t text-right flex justify-end">
                         <button type="button" @click="closeModal()"
-                            class="px-6 py-2 bg-gray-200 text-muted-foreground rounded-lg hover:bg-gray-300 mr-2">
+                            class="px-6 py-2 bg-muted-background text-muted-foreground rounded-lg hover:background mr-2">
                             Cancel
                         </button>
                         <button type="submit" :disabled="isSubmitting"
