@@ -4,7 +4,7 @@
     <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
         {{-- Navigasi Tab --}}
         <div class="mb-8">
-            <div class="border-b ">
+            <div class=" ">
                 <nav class="mb-8 flex space-x-8" aria-label="Tabs">
                     <a href="{{ route('explore.posts') }}"
                         class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-muted-foreground hover:text-foreground hover:border-border">
@@ -20,10 +20,10 @@
             </div>
 
             @if ($users->isNotEmpty())
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
                     @foreach ($users as $user)
                         <div
-                            class="bg-white   border  rounded-lg p-4 flex flex-col items-center text-center">
+                            class="bg-muted-background    rounded-lg p-4 flex flex-col items-center text-center">
                             <a href="{{ route('profile.show', $user) }}">
                                 <img src="{{ $user->avatar }}" alt="{{ $user->username }}'s avatar"
                                     class="w-20 h-20 rounded-full object-cover mb-4">
@@ -59,7 +59,7 @@
                     {{ $users->links() }}
                 </div>
             @else
-                <div class="bg-white   text-center p-10 rounded-lg shadow-md">
+                <div class="bg-netr   text-center p-10 rounded-lg shadow-md">
                     <p class=" text-secondary]">There's no one new to discover right now.</p>
                 </div>
             @endif

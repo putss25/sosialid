@@ -72,7 +72,7 @@
 
 
                 <p class="text-sm text-gray-500 mb-2">
-                    Already have an account? <a href="/register" class="text-blue-600 hover:underline">Sign in</a>
+                    Don't have an account?<a href="/register" class="text-blue-600 hover:underline">Sign up</a>
                 </p>
             </div>
         </div>
@@ -103,9 +103,9 @@
                 </div>
 
                 <div class="flex items-center space-x-4">
-                    <p class="text-xl p-2  rounded-full border-2 border-white shadow-lg">PN</p>
+                    <p class="text-xl p-2  rounded-full border-2 border-white shadow-lg">PS</p>
                     <div>
-                        <p class="font-semibold text-white">Pahril Nurfaisah</p>
+                        <p class="font-semibold text-white"> Putra Surya</p>
                         <p class="text-white/70 text-sm">DR. Content Creator</p>
                     </div>
                 </div>

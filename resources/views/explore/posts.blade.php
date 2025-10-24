@@ -4,7 +4,7 @@
     <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
         {{-- Navigasi Tab --}}
         <div class="mb-8">
-            <div class="border-b ]">
+            <div class="">
                 <nav class="-mb-px flex space-x-8" aria-label="Tabs">
                     <a href="{{ route('explore.posts') }}"
                         class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-primary border-primary"
@@ -56,8 +56,8 @@
                 {{ $posts->links() }}
             </div>
         @else
-            <div class="bg-white   text-center p-10 rounded-lg shadow-md">
-                <p class=" text-secondary]">You've seen all new posts for now!</p>
+            <div class="bg-netr   text-center p-10 rounded-lg shadow-md">
+                <p class=" text-secondary">You've seen all new posts for now!</p>
             </div>
         @endif
     </div>

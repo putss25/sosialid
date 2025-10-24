@@ -149,8 +149,7 @@
                                     </button>
 
                                     <a href="{{ route('posts.edit', $post) }}"
-                                        class="block px-4 py-2 text-sm text-foreground "
-                                        role="menuitem">
+                                        class="block px-4 py-2 text-sm text-foreground " role="menuitem">
                                         Edit
                                     </a>
 
@@ -204,10 +203,12 @@
                             @auth
                                 @if (auth()->user()->likes->contains($post))
                                     {{-- Jika SUDAH like, tampilkan tombol Un-like (hati merah) --}}
-                                    <form action="{{ route('post.unlike', $post) }}" method="POST"
-                                        class="h-fit flex items-center">
+                                    <form action="{{ route('post.unlike', $post) }}" method="POST" x-data="{ isSubmitting: false }"
+                                        @submit="isSubmitting = true" class="h-fit flex items-center">
                                         @csrf
-                                        <button type="submit">
+                                        <button type="submit" :disabled="isSubmitting"
+                                            class="disabled:opacity-50 disabled:cursor-not-allowed">
+
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"
                                                 stroke-linejoin="round" class="fill-accent stroke-accent">
@@ -219,10 +220,11 @@
                                 @else
                                     {{-- Jika BELUM like, tampilkan tombol Like (hati outline) --}}
 
-                                    <form action="{{ route('post.like', $post) }}" method="POST"
-                                        class="h-fit flex items-center">
+                                    <form action="{{ route('post.like', $post) }}" method="POST" x-data="{ isSubmitting: false }"
+                                        @submit="isSubmitting = true" class="h-fit flex items-center">
                                         @csrf
-                                        <button type="submit">
+                                        <button type="submit" :disabled="isSubmitting"
+                                            class="disabled:opacity-50 disabled:cursor-not-allowed">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                                 stroke-linecap="round" stroke-linejoin="round"
@@ -292,7 +294,8 @@
                     {{-- Form Comment dengan Auto-resize Textarea --}}
                     <div class="border-t border-border pt-3 mt-3  mb-3">
                         @auth
-                            <form action="{{ route('comments.store', $post) }}" method="POST">
+                            <form action="{{ route('comments.store', $post) }}" method="POST" {{-- 1. Inisialisasi variabel 'isSubmitting' sebagai false --}}
+                                x-data="{ isSubmitting: false }" {{-- 2. Saat form disubmit, ubah 'isSubmitting' jadi true --}} @submit="isSubmitting = true">
                                 @csrf
                                 <div class="flex w-full space-x-2 items-center justify-center ">
                                     <textarea name="body" rows="1"
@@ -302,8 +305,12 @@
                                     @error('body')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                     @enderror
-                                    <button type="submit"
-                                        class=" px-4 py-1 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-75">Post</button>
+                                    <button type="submit" {{-- 3. Tombol akan 'disabled' jika 'isSubmitting' adalah true --}} :disabled="isSubmitting"
+                                        {{-- Ini adalah kelas Tailwind Anda, kita tambahkan kelas 'disabled:' --}}
+                                        class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 
+                   disabled:bg-gray-400 disabled:cursor-not-allowed"><span
+                                            x-show="!isSubmitting">Post</span>
+                                        <span x-show="isSubmitting" style="display: none;">Posting...</span></button>
                                 </div>
                             </form>
                         @endauth

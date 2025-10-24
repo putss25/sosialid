@@ -44,20 +44,6 @@ html {
     color: var(--foreground);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: "Inter";
-    font-weight: bold;
-}
-
-p {
-    font-family: "Inter";
-}
-
 :root {
     --netr: #fff;
     --background: #f6f9fb;
@@ -83,7 +69,7 @@ p {
 /* GANTI .dark dengan :root.dark atau html.dark */
 :root.dark,
 html.dark {
-    --netr: #000;
+    --netr: #0  00;
 
     --background: rgb(13, 13, 15);
     --muted-background: rgb(26, 26, 28);
