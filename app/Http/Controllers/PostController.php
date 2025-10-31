@@ -53,6 +53,7 @@ class PostController extends Controller
         ]);
     }
 
+
     public function show(Post $post)
     {
          $post->load(['user', 'comments.user']) // Memperbaiki with() menjadi load() untuk memuat komentar
@@ -63,22 +64,24 @@ class PostController extends Controller
         ]);
     }
 
-    public function like(Post $post)
+public function like(Post $post)
     {
         $user = Auth::user();
-
         $user->likes()->attach($post);
 
-        return back();
+        // Muat ulang jumlah likes dan kembalikan sebagai JSON
+        $likeCount = $post->likes()->count();
+        return response()->json(['likeCount' => $likeCount]);
     }
 
     public function unlike(Post $post)
     {
         $user = Auth::user();
-
         $user->likes()->detach($post);
 
-        return back();
+        // Muat ulang jumlah likes dan kembalikan sebagai JSON
+        $likeCount = $post->likes()->count();
+        return response()->json(['likeCount' => $likeCount]);
     }
 
     public function destroy(Post $post)

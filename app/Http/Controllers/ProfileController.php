@@ -11,33 +11,28 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    public function show(User $user)
+public function show(User $user)
     {
+        $isFollowing = auth()->user() ? auth()->user()->following->contains($user->id) : false;
+        
         $user->loadCount(['posts', 'followers', 'following']);
+        $user->load(['followers', 'following']); 
 
-        // AMBIL POSTINGAN SECARA TERPISAH DENGAN PAGINASI
-        // Kita panggil method relasi posts() (dengan kurung) untuk mendapatkan query builder
+        // ==========================================================
+        // == UBAHAN: Tambahkan withCount() untuk menghitung like & comment ==
+        // ==========================================================
         $posts = $user->posts()
-            ->latest()
-            ->paginate(12);
-
-        $posts->LoadCount(['likes', 'comments']);
-        // ✅ Cek following status tanpa load semua following
-        $isFollowing = false;
-        if (Auth::check()) {
-            $isFollowing = Auth::user()
-                ->following()
-                ->where('following_user_id', $user->id)
-                ->exists();
-        }
+                    ->withCount(['likes', 'comments']) // <-- TAMBAHKAN INI
+                    ->latest()
+                    ->paginate(12);
+        // ==========================================================
 
         return view('users.profile', [
             'user' => $user,
-            'posts' => $posts,
             'isFollowing' => $isFollowing,
+            'posts' => $posts,
         ]);
     }
-
     public function edit()
     {
         $user = Auth::user();

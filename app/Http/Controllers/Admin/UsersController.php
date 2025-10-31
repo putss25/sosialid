@@ -13,6 +13,7 @@ class UsersController extends Controller
     {
         $query = User::query();
 
+
         if ($request->has('q')) {
             $search = $request->input('q');
             $query->where(function ($q) use ($search) {
@@ -47,17 +48,68 @@ class UsersController extends Controller
             'message' => 'user' . $user->username . 'Has bean unverified!'
         ]);
     }
+
+
     public function deleteUser(User $user)
     {
-        if ($user->id === Auth::id()) {
-            return back()->with('error', 'You cannot delete your own account from the admin panel');
+        if ($user->is_admin || $user->id === auth()->id()) {
+            abort(403);
         }
         $user->delete();
-
         return back()->with('notification', [
             'type' => 'error',
-            'message' =>
-            'User "' . $user->username . '" has been deleted!'
+            'message' => 'User deleted successfully'
         ]);
     }
-}
+
+    /**
+     * Jadikan user sebagai admin.
+     * Hanya bisa diakses oleh Super Admin (ID 1).
+     */
+    public function makeAdmin(User $user)
+    {
+        // Ini adalah "Satpam Utama"
+        if (auth()->id() !== 1) {
+            abort(403, 'This action is unauthorized.');
+        }
+
+        $user->update(['is_admin' => true]);
+
+        // == DIUBAH ==
+        // Kita ganti dari back() menjadi redirect() agar halaman refresh
+        return redirect()->route('admin.users.index')->with('notification', [
+            'type' => 'success',
+            'message' => $user->username . ' is now an admin.'
+        ]);
+    }
+
+    /**
+     * Cabut status admin dari user.
+     * Hanya bisa diakses oleh Super Admin (ID 1).
+     */
+    public function revokeAdmin(User $user)
+    {
+        // Ini adalah "Satpam Utama"
+        if (auth()->id() !== 1) {
+            abort(403, 'This action is unauthorized.');
+        }
+
+        // Mencegah Super Admin (ID 1) mencabut statusnya sendiri
+        if ($user->id === 1) {
+            return back()->with('notification', [
+                'type' => 'error',
+                'message' => 'Cannot revoke Super Admin status.'
+            ]);
+        }
+
+        $user->update(['is_admin' => false]);
+
+        // == DIUBAH ==
+        // Kita ganti dari back() menjadi redirect() agar halaman refresh
+        return redirect()->route('admin.users.index')->with('notification', [
+            'type' => 'success',
+            'message' => 'Admin status revoked from ' . $user->username . '.'
+        ]);
+    }
+    
+} // <-- Penutup kurung kurawal class

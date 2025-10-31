@@ -28,7 +28,10 @@ class User extends Authenticatable
         'bio',
         'avatar',
         'otp_code',
-        'otp_expires_at'
+        'otp_expires_at',   
+        'is_admin',
+        // 'website' sepertinya hilang dari $fillable Anda, 
+        // tapi saya biarkan sesuai kode yang Anda berikan.
     ];
 
     /**
@@ -86,4 +89,18 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class);
     }
-}
+
+    // ==========================================================
+    // == V V V INI FUNGSI BARU UNTUK FITUR DM V V V ==
+    // ==========================================================
+    /**
+     * Relasi ke Conversation (obrolan yang diikuti user).
+     * Seorang user (User) bisa bergabung di banyak obrolan (Conversation).
+     */
+    public function conversations(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Conversation::class);
+    }
+    // ==========================================================
+    
+} // <-- Ditambahkan sebelum kurung kurawal penutup ini

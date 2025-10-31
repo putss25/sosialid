@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\HomeController;
@@ -52,6 +53,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/explore/users', [ExploreController::class, 'users'])->name('explore.users');
     Route::get('/explore/posts', [ExploreController::class, 'posts'])->name('explore.posts');
 
+    Route::get('/messages', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/messages/{user}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/messages/{conversation}', [ChatController::class, 'store'])->name('chat.store');
+    Route::delete('/messages/{message}', [ChatController::class, 'destroy'])->name('chat.destroy');
+    Route::patch('/messages/{message}', [ChatController::class, 'update'])->name('chat.update');
+
     Route::post('/profile/{user:username}/follow', [ProfileController::class, 'follow'])->name('profile.follow');
     Route::post('/profile/{user:username}/unfollow', [ProfileController::class, 'unfollow'])->name('profile.unfollow');
 
@@ -73,6 +80,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/users/{user}/verify', [UsersController::class, 'verifyUser'])->name('users.verify');
     Route::patch('/users/{user}/unverify', [UsersController::class, 'unverifyUser'])->name('users.unverify');
     Route::delete('/users/{user}', [UsersController::class, 'deleteUser'])->name('users.destroy');
+
+    // ==========================================================
+    // == TAMBAHKAN 2 BARIS BARU DI BAWAH INI ==
+    Route::patch('/users/{user}/make-admin', [UsersController::class, 'makeAdmin'])->name('users.make-admin');
+    Route::patch('/users/{user}/revoke-admin', [UsersController::class, 'revokeAdmin'])->name('users.revoke-admin');
+    // ==========================================================
 
     Route::get('/posts', [AdminPostController::class, 'posts'])->name('posts.index');
     Route::delete('/post/{post}', [AdminPostController::class, 'deletePost'])->name('posts.destroy');

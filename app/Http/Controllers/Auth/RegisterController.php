@@ -29,8 +29,9 @@ class RegisterController extends Controller
 
         // 2. Generate OTP dan waktu kedaluwarsa
         $otp = random_int(100000, 999999);
-        $expiresAt = now()->addMinutes(5);
-
+        // $expiresAt = now()->addMinutes(1);
+        $time = 5;
+        $expiresAt = now()->addMinutes($time);
         // 3. Simpan SEMUA data registrasi (termasuk OTP) ke dalam session
         //    Kita TIDAK membuat user di sini.
         $request->session()->put('registration_data', [
@@ -43,7 +44,7 @@ class RegisterController extends Controller
         ]);
 
         // 4. Kirim email OTP
-        Mail::to($validated['email'])->send(new SendOtpMail((string)$otp));
+        Mail::to($validated['email'])->send(new SendOtpMail((string)$otp, $time));
 
 
         // 5. Redirect ke halaman verifikasi OTP

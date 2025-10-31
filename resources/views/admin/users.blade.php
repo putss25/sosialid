@@ -29,6 +29,9 @@
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verified
                         </th>
+                        
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role
+                        </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions
                         </th>
                     </tr>
@@ -38,37 +41,123 @@
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $user->username }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $user->email }}</td>
-                            {{-- resources/views/admin/users.blade.php --}}
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center space-x-4">
+                            
+                            {{-- Ini adalah 'cell' untuk VERIFIED (Sudah ada) --}}
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 @if ($user->is_verified)
                                     {{-- Jika sudah terverifikasi, tampilkan tombol Unverify --}}
                                     <form action="{{ route('admin.users.unverify', $user) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
                                         <button type="submit"
-                                            class="text-yellow-600 hover:text-yellow-900">Unverify</button>
+                                            class="flex items-center text-yellow-600 hover:text-yellow-800"
+                                            title="Unverify User">
+                                            {{-- Ini adalah ikon 'Perisai Coret' dari Lucide --}}
+                                            <x-lucide-shield-off class="w-5 h-5 mr-1" />
+                                            <span>Unverify</span>
+                                        </button>
                                     </form>
                                 @else
                                     {{-- Jika belum terverifikasi, tampilkan tombol Verify --}}
                                     <form action="{{ route('admin.users.verify', $user) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="text-indigo-600 hover:text-indigo-900">Verify</button>
+                                        <button type="submit"
+                                            class="flex items-center text-indigo-600 hover:text-indigo-800"
+                                            title="Verify User">
+                                            {{-- Ini adalah ikon 'Perisai Centang' dari Lucide --}}
+                                            <x-lucide-shield-check class="w-5 h-5 mr-1" />
+                                            <span>Verify</span>
+                                        </button>
                                     </form>
                                 @endif
-
-                                {{-- Tombol Delete (tetap sama) --}}
-
                             </td>
+
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                {{-- Kolom Aksi akan kita isi di bawah --}}
+                                {{-- Cek apakah yang login adalah SUPER ADMIN (ID 1) --}}
+                                @if (auth()->id() === 1)
+                                    
+                                    {{-- Jika user di baris ini adalah SUPER ADMIN (ID 1) --}}
+                                    @if ($user->id === 1)
+                                        <span class="flex items-center text-blue-600 font-bold" title="Super Admin">
+                                            <x-lucide-award class="w-5 h-5 mr-1" />
+                                            <span>Super Admin</span>
+                                        </span>
+                                    
+                                    {{-- Jika user di baris ini adalah ADMIN BIASA --}}
+                                    @elseif ($user->is_admin)
+                                        <form action="{{ route('admin.users.revoke-admin', $user) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="flex items-center text-yellow-600 hover:text-yellow-800" title="Revoke Admin Status">
+                                                <x-lucide-user-minus class="w-5 h-5 mr-1" />
+                                                <span>Revoke Admin</span>
+                                            </button>
+                                        </form>
+
+                                    {{-- Jika user di baris ini adalah USER BIASA --}}
+                                    @else
+                                        <form action="{{ route('admin.users.make-admin', $user) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="flex items-center text-green-600 hover:text-green-800" title="Make Admin">
+                                                <x-lucide-user-plus class="w-5 h-5 mr-1" />
+                                                <span>Make Admin</span>
+                                            </button>
+                                        </form>
+                                    @endif
+
+                                {{-- Jika yang login BUKAN SUPER ADMIN (tapi admin biasa) --}}
+                                @else
+
+            {{-- V V V TAMBAHKAN LOGIKA INI V V V --}}
+            {{-- Cek dulu, apakah user di baris ini adalah Super Admin (ID 1)? --}}
+            @if ($user->id === 1)
+                <span class="flex items-center text-blue-600 font-bold" title="Super Admin">
+                    <x-lucide-award class="w-5 h-5 mr-1" />
+                    <span>Super Admin</span>
+                </span>
+
+            {{-- Jika bukan ID 1, baru cek apakah dia admin biasa? --}}
+            @elseif ($user->is_admin)
+            {{-- ^ ^ ^ BATAS PENAMBAHAN ^ ^ ^ --}}
+
+                <span class="flex items-center text-gray-500" title="Admin">
+                    <x-lucide-user-check class="w-5 h-5 mr-1" />
+                    <span>Admin</span>
+                </span>
+            @else
+                <span class="flex items-center text-gray-400">
+                    <x-lucide-user class="w-5 h-5 mr-1" />
+                    <span>User</span>
+                </span>
+            @endif
+        @endif
+                            </td>
+                            {{-- Ini adalah 'cell' untuk ACTIONS (Sudah ada) --}}
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                {{-- Logikanya: JIKA BUKAN ADMIN... --}}
                                 @if (!$user->is_admin && $user->id !== auth()->id())
                                     <form action="{{ route('admin.users.destroy', $user) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900"
-                                            onclick="return confirm('Are you sure?')">Delete</button>
+                                        <button type="submit"
+                                            class="flex items-center text-red-600 hover:text-red-800"
+                                            title="Delete User"
+                                            onclick="return confirm('Are you sure you want to delete this user and all their data?')">
+                                            <x-lucide-trash-2 class="w-5 h-5 mr-1" />
+                                            <span>Delete</span>
+                                        </button>
                                     </form>
+                                @else
+                                    {{-- INI TANDA BARUNYA: JIKA DIA ADMIN --}}
+                                    <span class="flex items-center text-gray-400 cursor-not-allowed"
+                                        title="Admin accounts cannot be deleted">
+
+                                        {{-- Ikon gembok dari Lucide --}}
+                                        <x-lucide-lock class="w-5 h-5 mr-1" />
+                                        <span>Admin</span>
+                                    </span>
                                 @endif
                             </td>
                         </tr>

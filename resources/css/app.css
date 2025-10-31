@@ -52,7 +52,7 @@ html {
     --muted-foreground: rgb(14, 22, 36);
     --border: #b7bcc0;
 
-    --primary: #3897d4;
+    --primary: #063c5d;
     --primary-hover: #247ab0;
     --primary-foreground: #060b0e;
 
@@ -77,7 +77,7 @@ html.dark {
     --muted-foreground: rgb(154, 159, 163);
     --border: #373839;
 
-    --primary: #3897d4;
+    --primary:  #063c5d;
     --primary-hover: rgb(25, 97, 141);
     --primary-foreground: #060b0e;
     --secondary: #77bfee;

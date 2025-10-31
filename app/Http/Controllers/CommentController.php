@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Auth as FacadesAuth;
+// Hapus 'use Illuminate\Support\Facades\Auth as FacadesAuth;' jika ada, karena duplikat
 
 class CommentController extends Controller
 {
@@ -15,18 +15,27 @@ class CommentController extends Controller
         $validated = $request->validate([
             'body' => 'required|string|max:2500',
         ]);
-        // 2. Buat komentar menggunakan relasi
-        $post->comments()->create([
-            'user_id' => FacadesAuth::id(),
+        
+        // 2. Buat komentar dan simpan di variabel
+        $newComment = $post->comments()->create([
+            'user_id' => Auth::id(), // Gunakan Auth::id()
             'body' => $validated['body'],
         ]);
 
-        // 3. Redirect kembali ke halaman sebelumnya
-        return back()->with('status', 'Comment posted!');
+        // ==========================================================
+        // == UBAHAN: Kembalikan JSON, bukan 'back()' ==
+        // ==========================================================
+        
+        // 3. Kita perlu data user (avatar, username) untuk ditampilkan di frontend
+        $newComment->load('user'); // Pastikan Model Comment punya relasi user()
+        
+        // 4. Ambil jumlah komentar terbaru
+        $commentCount = $post->comments()->count();
 
-        return back()->with('notification', [
-            'type' => 'success',
-            'message' => 'Comment posted!'
+        // 5. Kembalikan semua data sebagai JSON
+        return response()->json([
+            'newComment' => $newComment,
+            'commentCount' => $commentCount
         ]);
     }
 }

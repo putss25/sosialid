@@ -78,7 +78,7 @@ class VerificationController extends Controller
 
         // Generate OTP dan expiry baru
         $otp = random_int(100000, 999999);
-        $expiresAt = now()->addMinutes(5);
+        $expiresAt = now()->addMinute(5);
 
         // Update data di session
         $registrationData['otp'] = $otp;
@@ -86,7 +86,7 @@ class VerificationController extends Controller
         $request->session()->put('registration_data', $registrationData);
 
         // Kirim ulang email
-        Mail::to($registrationData['email'])->send(new SendOtpMail((string)$otp));
+        Mail::to($registrationData['email'])->send(new SendOtpMail((string)$otp, $expiresAt));
 
         return back()->with('status', 'A new OTP has been sent to your email address.');
     }

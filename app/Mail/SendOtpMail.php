@@ -17,9 +17,12 @@ class SendOtpMail extends Mailable
      * Create a new message instance.
     */
     public string $otp;
-  public function __construct(string $otp)
+    public $expiresAt;
+
+  public function __construct(string $otp, $expiresAt)
     {
         $this->otp = $otp;
+        $this->expiresAt = $expiresAt;
     }
 
     /**

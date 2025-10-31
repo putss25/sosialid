@@ -38,13 +38,18 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 {{-- Karena ini halaman admin, kita bisa langsung tampilkan tombol hapus --}}
                                 {{-- Arahkan 'action' ke rute admin yang baru --}}
-                                <form action="{{ route('admin.posts.destroy', $post) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900"
-                                        onclick="return confirm('Are you sure you want to delete this post?')">Delete</button>
-                                </form>
-                            </td>
+<form action="{{ route('admin.posts.destroy', $post) }}" method="POST">
+    @csrf
+    @method('DELETE')
+    <button type="submit"
+        class="flex items-center text-red-600 hover:text-red-800"
+        title="Delete Post"
+        onclick="return confirm('Are you sure you want to delete this post?')">
+        {{-- Ini adalah ikon 'Tong Sampah' dari Lucide --}}
+        <x-lucide-trash-2 class="w-5 h-5 mr-1" />
+        <span>Delete</span>
+    </button>
+</form>                            </td>
                             </td>
                         </tr>
                     @endforeach
