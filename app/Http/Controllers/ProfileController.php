@@ -13,7 +13,7 @@ class ProfileController extends Controller
 {
 public function show(User $user)
     {
-        $isFollowing = auth()->user() ? auth()->user()->following->contains($user->id) : false;
+        $isFollowing = Auth::user() ? Auth::user()->following->contains($user->id) : false;
         
         $user->loadCount(['posts', 'followers', 'following']);
         $user->load(['followers', 'following']); 

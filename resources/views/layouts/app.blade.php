@@ -158,7 +158,7 @@
                 <img src="/images/snapi.svg" class="w-[40%] min-w-[80px]" alt="Snapi Logo">
                 
                 <!-- Messages Icon for Desktop (Top Right) -->
-                <a href="{{ route('chat.index') }}" class="relative p-2 hover:opacity-70 transition xl:hidden">
+                <a href="{{ route('chat.index') }}" class="relative p-2 hover:opacity-70 transition lg:hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" class="lucide lucide-message-circle text-foreground">
@@ -169,7 +169,7 @@
                 </a>
             </div>
 
-            <nav class="flex-grow flex flex-col text-muted-foreground text-lg xl:text-xl gap-1">
+            <nav class="flex-grow flex flex-col text-muted-foreground text-lg lg:text-xl gap-1">
                 <!-- Home Link -->
                 <a href="{{ route('home') }}"
                     class="flex items-center px-3 xl:px-4 py-2.5 xl:py-3 hover:text-foreground hover:bg-muted-background font-semibold transition-all duration-200 rounded-lg mx-2 {{ request()->routeIs('home') ? 'bg-muted-background text-foreground' : '' }}">
@@ -179,7 +179,7 @@
                         <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
                         <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                     </svg>
-                    <span class="hidden xl:inline">Home</span>
+                    <span class="hidden lg:inline">Home</span>
                 </a>
                 
                 <!-- Create Button -->
@@ -191,7 +191,7 @@
                         <path d="M5 12h14" />
                         <path d="M12 5v14" />
                     </svg>
-                    <span class="hidden xl:inline">Create</span>
+                    <span class="hidden lg:inline">Create</span>
                 </button>
                 
                 <!-- Search Link -->
@@ -203,7 +203,7 @@
                         <path d="m21 21-4.34-4.34" />
                         <circle cx="11" cy="11" r="8" />
                     </svg>
-                    <span class="hidden xl:inline">Search</span>
+                    <span class="hidden lg:inline">Search</span>
                 </a>
                 
                 <!-- Explore Link -->
@@ -215,7 +215,7 @@
                         <path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" />
                         <circle cx="12" cy="12" r="10" />
                     </svg>
-                    <span class="hidden xl:inline">Explore</span>
+                    <span class="hidden lg:inline">Explore</span>
                 </a>
 
                 <!-- Messages Link -->
@@ -226,7 +226,7 @@
                         stroke-linejoin="round" class="lucide lucide-message-circle text-foreground mr-3 flex-shrink-0">
                         <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
                     </svg>
-                    <span class="hidden xl:inline">Messages</span>
+                    <span class="hidden lg:inline">Messages</span>
                 </a>
 
                 <!-- Profile Link -->
@@ -234,7 +234,7 @@
                     class="flex items-center px-3 xl:px-4 py-2.5 xl:py-3 hover:text-foreground hover:bg-muted-background font-semibold transition-all duration-200 rounded-lg mx-2 {{ request()->routeIs('profile.show', auth()->user()) ? 'bg-muted-background text-foreground' : '' }}">
                     <img class="w-6 h-6 mr-3 object-cover rounded-full flex-shrink-0" src="{{ Auth::user()->avatar }}"
                         alt="Your avatar">
-                    <span class="hidden xl:inline truncate">Profile</span>
+                    <span class="hidden lg:inline truncate">Profile</span>
                 </a>
             </nav>
 

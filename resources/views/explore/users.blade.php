@@ -11,7 +11,7 @@
                         Posts
                     </a>
                     <a href="{{ route('explore.users') }}"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-primary border-primary"
+                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-primary-hover border-primary-hover"
                         aria-current="page">
                         People
                     </a>
